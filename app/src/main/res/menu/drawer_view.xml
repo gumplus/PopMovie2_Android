@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@mipmap/ic_launcher"
+            android:title="home"
+            />
+
+        <item
+            android:id="@+id/nav_message"
+            android:icon="@mipmap/ic_launcher"
+            android:title="Message"
+            />
+        <item
+            android:id="@+id/nav_friends"
+            android:icon="@mipmap/ic_launcher"
+            android:title="Friends"
+            />
+    </group>
+
+
+    <group android:checkableBehavior="single">
+
+    <item android:title="Sub Items">
+
+        <menu>
+
+            <item
+                android:id="@+id/nav_web"
+                android:icon="@mipmap/ic_launcher"
+                android:title="WebView"
+                />
+
+            <item
+                android:id="@+id/nav_phonecall"
+                android:icon="@mipmap/ic_launcher"
+                android:title="Phone Call"
+                />
+
+        </menu>
+
+    </item>
+
+    </group>
+
+
+</menu>

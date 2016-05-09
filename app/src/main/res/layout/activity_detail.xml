@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/detail_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+  <android.support.design.widget.AppBarLayout
+      android:layout_width="match_parent"
+      android:layout_height="256dp"
+      android:fitsSystemWindows="true">
+
+
+    <android.support.design.widget.CollapsingToolbarLayout
+        android:id="@+id/coToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+      <com.facebook.drawee.view.SimpleDraweeView
+          android:id="@+id/detail_backdrop"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:fitsSystemWindows="true"
+          fresco:actualImageScaleType="focusCrop"
+          fresco:placeholderImage="@drawable/loading"
+          fresco:placeholderImageScaleType="fitCenter"
+          fresco:failureImage="@drawable/stop"
+          fresco:failureImageScaleType="centerInside"
+          />
+
+
+      <android.support.v7.widget.Toolbar
+          android:id="@+id/detail_toolbar"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+          />
+
+
+    </android.support.design.widget.CollapsingToolbarLayout>
+
+
+  </android.support.design.widget.AppBarLayout>
+
+
+  <android.support.v4.widget.NestedScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:fresco="http://schemas.android.com/apk/res-auto"
+
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+      <com.facebook.drawee.view.SimpleDraweeView
+          android:id="@+id/detail_fresco"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          fresco:fadeDuration="300"
+          fresco:actualImageScaleType="focusCrop"
+          fresco:placeholderImage="@drawable/loading"
+          fresco:placeholderImageScaleType="fitCenter"
+          fresco:failureImage="@drawable/stop"
+          fresco:failureImageScaleType="centerInside"
+
+
+          />
+
+
+      <TextView
+          android:id="@+id/movie_text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text=" 这是电影详情页里面的电影简介 这是电影详情页里面的电影简介  "
+          android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+
+
+    </android.support.v7.widget.CardView>
+
+
+    </LinearLayout>
+
+
+  </android.support.v4.widget.NestedScrollView>
+
+
+
+
+
+</android.support.design.widget.CoordinatorLayout>
+
