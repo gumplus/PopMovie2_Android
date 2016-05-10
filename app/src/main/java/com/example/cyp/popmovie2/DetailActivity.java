@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;
 
@@ -21,12 +22,16 @@ public class DetailActivity extends AppCompatActivity {
     public SimpleDraweeView backDrop;
     public TextView movieText;
     private String posterDetailUrl;
+    private int movieId;
+
+    public JsonBean jsonBeanReceived;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Fresco.initialize(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
 
         movieText = (TextView) findViewById(R.id.movie_text);
 
@@ -43,10 +48,17 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         posterDetailUrl = intent.getStringExtra("posterUrltodetailpage");
+        movieId = intent.getIntExtra("movie_id_todetailpage",1);
+
+        jsonBeanReceived = intent.getParcelableExtra("jsonData");
+
+        Log.d("Received jsonData", String.valueOf(jsonBeanReceived));
+        Log.d("movieId", String.valueOf(movieId));
 
         Uri uri = Uri.parse(posterDetailUrl);
 //        detailPostView.setImageURI(uri);
         backDrop.setImageURI(uri);
+
     }
 
     @Override
@@ -54,4 +66,6 @@ public class DetailActivity extends AppCompatActivity {
        getMenuInflater().inflate(R.menu.action_menu,menu);
         return true;
     }
+
+
 }

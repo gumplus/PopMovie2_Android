@@ -1,6 +1,9 @@
 package com.example.cyp.popmovie2;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 /**
@@ -9,10 +12,14 @@ import java.util.ArrayList;
 
 // a class for the reply of tmdb api  by gson  parse way
 
-public class JsonBean {
+public class JsonBean implements Parcelable {
 
     private int page;
-    private ArrayList<Results> results;
+    private ArrayList<Results> results = new ArrayList<>();
+
+    public JsonBean() {
+
+    }
 
 
     public int getPage() {
@@ -32,7 +39,7 @@ public class JsonBean {
     }
 
 
-    public static class Results {
+    public static class Results implements Parcelable {
         public int id;
         public double popularity;
         public double vote_average;
@@ -42,6 +49,10 @@ public class JsonBean {
         public String overview;
         public String release_date;
         public String original_language;
+
+        public Results() {
+
+        }
 
         public int getId() {
             return id;
@@ -117,12 +128,86 @@ public class JsonBean {
         }
 
 
+
+
+        //ArrayList<Results> to be Parcelable
+
+        private Results(Parcel in) {
+            this.id = in.readInt();
+            this.vote_average = in.readDouble();
+            this.title = in.readString();
+            this.poster_path = in.readString();
+            this.overview = in.readString();
+            this.release_date = in.readString();
+
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+
+            dest.writeInt(id);
+            dest.writeDouble(vote_average);
+            dest.writeString(title);
+            dest.writeString(poster_path);
+            dest.writeString(overview);
+            dest.writeString(release_date);
+        }
+
+        //package the inner class of Results to be a CREATOR
+        public static final Parcelable.Creator<Results> CREATOR = new Parcelable.Creator<Results>() {
+            @Override
+            public Results createFromParcel(Parcel source) {
+                return new Results(source);
+            }
+
+            @Override
+            public Results[] newArray(int size) {
+                return new Results[size];
+            }
+        };
+
+        //end of the
     }
+
+
+
+    //JsonBean to be Parcelable
+
+    public JsonBean(Parcel in) {
+        this.page = in.readInt();
+//        this.results = new ArrayList<>();
+        in.readTypedList(results, Results.CREATOR);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(page);
+        dest.writeTypedList(results);
+    }
+
+    public static final Parcelable.Creator<JsonBean> CREATOR = new Parcelable.Creator<JsonBean>() {
+        @Override
+        public JsonBean createFromParcel(Parcel source) {
+            return new JsonBean(source);
+        }
+
+        @Override
+        public JsonBean[] newArray(int size) {
+            return new JsonBean[size];
+        }
+    };
 
 
 
 
 }
-
-
-

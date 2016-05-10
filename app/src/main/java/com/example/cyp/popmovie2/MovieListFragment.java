@@ -28,9 +28,11 @@ import java.util.ArrayList;
  */
 public class MovieListFragment extends Fragment {
 
-    public ArrayList<String> posterUrls;
+    private ArrayList<String> posterUrls;
 
+    private static ArrayList<Integer> movieIdList;
 
+    public static JsonBean jsonData = new JsonBean();
 
 
     @Nullable
@@ -41,6 +43,7 @@ public class MovieListFragment extends Fragment {
 
         //put the recyclerView into the container of MovieListFragment
         RecyclerView rv = (RecyclerView) inflater.inflate(R.layout.fragment_movie_list, container, false);
+
         setupRecyclerView(rv);
         return rv;
     }
@@ -51,6 +54,15 @@ public class MovieListFragment extends Fragment {
 
         Bundle bundle = getArguments();
         posterUrls = bundle.getStringArrayList("movie_urls");
+        movieIdList = bundle.getIntegerArrayList("movie_id");
+
+        jsonData =  bundle.getParcelable("jsonbean_key");
+
+        if(jsonData != null ){
+            Log.d("jsonData","is not null");
+            ArrayList<JsonBean.Results> resultList = jsonData.getResults();
+        }
+
 
         recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(), 2));
 
@@ -145,6 +157,8 @@ public class MovieListFragment extends Fragment {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, DetailActivity.class);
                     intent.putExtra("posterUrltodetailpage",mValues.get(position));
+                    intent.putExtra("movie_id_todetailpage",movieIdList.get(position));
+                    intent.putExtra("jsonData", jsonData);
                     context.startActivity(intent);
                 }
             });

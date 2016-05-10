@@ -1,5 +1,6 @@
 package com.example.cyp.popmovie2;
 
+
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -41,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
     //the complete absolute path of a movie poster
     private String popFinalUrl;
     //a collection of absolute url of movie poster
-    public ArrayList<String> posterUrls = new ArrayList<>();
+    private ArrayList<String> posterUrls = new ArrayList<>();
+    //Movie Id
+    private ArrayList<Integer> movieIdList = new ArrayList<>();
 
     public Bundle bundle = new Bundle();
 
@@ -70,8 +73,10 @@ public class MainActivity extends AppCompatActivity {
 
         //put the moviePosterUrls into bundle and then transfer it to  onCreateView function of MovieListFragment class
 //        bundle = savedInstanceState;
-        bundle.putStringArrayList("movie_urls", posterUrls);
 
+
+        bundle.putStringArrayList("movie_urls", posterUrls);
+        bundle.putIntegerArrayList("movie_id", movieIdList);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -88,8 +93,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewpager);
 
 
-
-
     }
 
     @Override
@@ -104,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // "android" here is demanded? why?
             case android.R.id.home:
-                //rebuild the drwerLayout  ?
+                //rebuild the drawerLayout  ?
                 mDrawerLayout.openDrawer(GravityCompat.START);
         }
         return true;
@@ -138,13 +141,23 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+
                 ArrayList<JsonBean.Results> result = jsonBean.getResults();
+
+                //把jsonbean  和  result Object直接传递到 bundle 存储
+                bundle.putParcelable("jsonbean_key", jsonBean);
+//                bundle.putParcelable("result_key", (Parcelable) result);
                 Log.d("result.size", String.valueOf(result.size()));
 
                 for (int i =0; i< result.size();i++) {
 
+                    //get poster path:
                     popPosterPath = result.get(i).getPoster_path();
                     Log.d("popPosterPath", popPosterPath);
+
+                    //get movie id list:
+                    Log.d("result.getId()", String.valueOf(result.get(i).getId()));
+                    movieIdList.add(result.get(i).getId());
 
                     popFinalUrl = posterBaseUrl + popPosterPath;
                     Log.d("popFinalUrl", popFinalUrl);
@@ -163,14 +176,12 @@ public class MainActivity extends AppCompatActivity {
         FragPagerAdapter adapter = new FragPagerAdapter(getSupportFragmentManager());
 
 
-
         // add fragment into adpter
-        adapter.addFragment(MovieListFragment.newInstance(bundle), " Top 20 Pop Movie");
-//        adapter.addFragment(MovieListFragment.newInstance(bundle), "Top rated Movie");
-//        adapter.addFragment(MovieListFragment.newInstance(bundle), "Tab 3");
+        adapter.addFragment(MovieListFragment.newInstance(bundle), "Most Popular");
+        adapter.addFragment(MovieListFragment.newInstance(bundle), "Top Rated");
+        adapter.addFragment(MovieListFragment.newInstance(bundle), "Tab 3");
 
         viewpager.setAdapter(adapter);
-
     }
 
     //setNavigationItem SelectedListener
