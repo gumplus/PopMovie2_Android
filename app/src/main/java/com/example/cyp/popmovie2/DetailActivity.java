@@ -13,12 +13,16 @@ import android.widget.TextView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import java.util.ArrayList;
+
 /**
  * Created by apple on 16/5/5.
  */
 public class DetailActivity extends AppCompatActivity {
 
-    public SimpleDraweeView detailPostView;
+    private String movieTitle;
+    private int moviePosition;
+
     public SimpleDraweeView backDrop;
     public TextView movieText;
     private String posterDetailUrl;
@@ -26,14 +30,32 @@ public class DetailActivity extends AppCompatActivity {
 
     public JsonBean jsonBeanReceived;
 
+    private ArrayList<JsonBean.Results> resultsDetailpage = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Fresco.initialize(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        movieText = (TextView) findViewById(R.id.overview_text);
 
-        movieText = (TextView) findViewById(R.id.movie_text);
+        //normal way to get data via intent.putExtra function
+        Intent intent = getIntent();
+        savedInstanceState = getIntent().getExtras();
+
+        posterDetailUrl = intent.getStringExtra("posterUrltodetailpage");
+
+        //get the jsonBean,results,position from the view of selected movie [Parcelable way]
+        jsonBeanReceived = intent.getParcelableExtra("jsonData");
+        resultsDetailpage = jsonBeanReceived.getResults();
+        moviePosition = savedInstanceState.getInt("position");
+        movieTitle = resultsDetailpage.get(moviePosition).getTitle();
+
+        Log.d("Received jsonData", String.valueOf(jsonBeanReceived));
+        Log.d("movieId", String.valueOf(movieId));
+
+
 
 
         Toolbar toolbarDetail = (Toolbar) findViewById(R.id.detail_toolbar);
@@ -41,22 +63,19 @@ public class DetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         CollapsingToolbarLayout coToolbar = (CollapsingToolbarLayout) findViewById(R.id.coToolbar);
-        coToolbar.setTitle("电影详情页");
+        //Set the title of toolbar
+        coToolbar.setTitle(movieTitle);
+        //How to set the color and style of title ?
 
-        detailPostView = (SimpleDraweeView) findViewById(R.id.detail_fresco);
+//        detailPostView = (SimpleDraweeView) findViewById(R.id.detail_fresco);
         backDrop = (SimpleDraweeView) findViewById(R.id.detail_backdrop);
 
-        Intent intent = getIntent();
-        posterDetailUrl = intent.getStringExtra("posterUrltodetailpage");
-        movieId = intent.getIntExtra("movie_id_todetailpage",1);
 
-        jsonBeanReceived = intent.getParcelableExtra("jsonData");
 
-        Log.d("Received jsonData", String.valueOf(jsonBeanReceived));
-        Log.d("movieId", String.valueOf(movieId));
+
 
         Uri uri = Uri.parse(posterDetailUrl);
-//        detailPostView.setImageURI(uri);
+
         backDrop.setImageURI(uri);
 
     }

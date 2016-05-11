@@ -2,6 +2,7 @@
 
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/detail_main"
     android:layout_width="match_parent"
@@ -10,16 +11,29 @@
 
 
   <android.support.design.widget.AppBarLayout
+      android:id="@+id/appbar_detail"
       android:layout_width="match_parent"
       android:layout_height="256dp"
-      android:fitsSystemWindows="true">
+      android:fitsSystemWindows="true"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      >
 
+    <!--CollapsingToolbarLayout作用是提供了一个可以折叠的Toolbar，-->
+    <!--它继承至FrameLayout，给它设置layout_scrollFlags，-->
+    <!--它可以控制包含在CollapsingToolbarLayout中的控件-->
+    <!--(如：ImageView、Toolbar)在响应layout_behavior事件时作出相应的scrollFlags滚动事件-->
+    <!--(移除屏幕或固定在屏幕顶端)。-->
 
     <android.support.design.widget.CollapsingToolbarLayout
+        xmlns:fresco="http://schemas.android.com/apk/res-auto"
         android:id="@+id/coToolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="match_parent"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed"
+        app:contentScrim="?attr/colorPrimaryDark"
+        app:expandedTitleMarginStart="48dp"
+        app:expandedTitleMarginEnd="48dp"
+        >
       <com.facebook.drawee.view.SimpleDraweeView
           android:id="@+id/detail_backdrop"
           android:layout_width="match_parent"
@@ -32,16 +46,19 @@
           fresco:failureImageScaleType="centerInside"
           />
 
-
       <android.support.v7.widget.Toolbar
           android:id="@+id/detail_toolbar"
+          android:title="@string/app_name"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+          android:layout_height="?attr/actionBarSize"
+          app:layout_collapseMode="pin"
+          android:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
           />
 
 
     </android.support.design.widget.CollapsingToolbarLayout>
+
+
 
 
   </android.support.design.widget.AppBarLayout>
@@ -49,7 +66,8 @@
 
   <android.support.v4.widget.NestedScrollView
       android:layout_width="match_parent"
-      android:layout_height="match_parent">
+      android:layout_height="match_parent"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
 
@@ -60,27 +78,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/intro_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"/>
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-      <com.facebook.drawee.view.SimpleDraweeView
-          android:id="@+id/detail_fresco"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          fresco:fadeDuration="300"
-          fresco:actualImageScaleType="focusCrop"
-          fresco:placeholderImage="@drawable/loading"
-          fresco:placeholderImageScaleType="fitCenter"
-          fresco:failureImage="@drawable/stop"
-          fresco:failureImageScaleType="centerInside"
-
-
-          />
 
 
       <TextView
-          android:id="@+id/movie_text"
+          android:id="@+id/overview_text"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:text=" 这是电影详情页里面的电影简介 这是电影详情页里面的电影简介  "

@@ -32,8 +32,10 @@ public class MainActivity extends AppCompatActivity {
 
     private final String api_key = "?api_key=92741aee53714cbe1a7d87fc658bbaad";
 
-    //the base api in popular way
+    //the base api of popular
     private String popBaseApi = "http://api.themoviedb.org/3/movie/popular";
+    //the base api of toprated
+    private String ratedBaseAPi = "http://api.themoviedb.org/3/movie/top_rated";
     //the base part api of absolutePath of movie poster
     private String posterBaseUrl = "http://image.tmdb.org/t/p/w185";
 
@@ -71,10 +73,8 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //put the moviePosterUrls into bundle and then transfer it to  onCreateView function of MovieListFragment class
-//        bundle = savedInstanceState;
 
-
+        //normal way to store detailed data
         bundle.putStringArrayList("movie_urls", posterUrls);
         bundle.putIntegerArrayList("movie_id", movieIdList);
 
@@ -117,6 +117,8 @@ public class MainActivity extends AppCompatActivity {
     public void getPosterUrls() throws Exception {
         OkHttpClient okHttpClient = new OkHttpClient();
 
+
+        //这里需要 识别区分 查询api （pop or toprated）
         Request request = new Request.Builder()
                 .url(popBaseApi + api_key)
                 .build();
@@ -146,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //把jsonbean  和  result Object直接传递到 bundle 存储
                 bundle.putParcelable("jsonbean_key", jsonBean);
-//                bundle.putParcelable("result_key", (Parcelable) result);
+
                 Log.d("result.size", String.valueOf(result.size()));
 
                 for (int i =0; i< result.size();i++) {
@@ -179,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         // add fragment into adpter
         adapter.addFragment(MovieListFragment.newInstance(bundle), "Most Popular");
         adapter.addFragment(MovieListFragment.newInstance(bundle), "Top Rated");
-        adapter.addFragment(MovieListFragment.newInstance(bundle), "Tab 3");
+//        adapter.addFragment(MovieListFragment.newInstance(bundle), "Tab 3");
 
         viewpager.setAdapter(adapter);
     }

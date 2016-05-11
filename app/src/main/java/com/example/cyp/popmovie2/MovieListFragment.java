@@ -58,6 +58,7 @@ public class MovieListFragment extends Fragment {
 
         jsonData =  bundle.getParcelable("jsonbean_key");
 
+        //test
         if(jsonData != null ){
             Log.d("jsonData","is not null");
             ArrayList<JsonBean.Results> resultList = jsonData.getResults();
@@ -141,24 +142,32 @@ public class MovieListFragment extends Fragment {
 
                 Log.d("mValues.get(i)", mValues.get(position));
 
-//             And Now I replace of Glide libs with Fresco.
-
+//            // And Now I replace of Glide libs with Fresco.
 //            Glide.with(viewHolder.mImageView.getContext())
 //                    .load(mValues.get(position)).fitCenter().into(viewHolder.mImageView);
 
             Uri uri = Uri.parse(mValues.get(position));
-
             viewHolder.draweeView.setImageURI(uri);
 
 
             viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Context context = v.getContext();
+
+                    //store jsonData into a bundle
+                    Bundle bundleToDetail = new Bundle();
+                    bundleToDetail.putInt("position", position);
+                    bundleToDetail.putParcelable("jsonData", jsonData);
+
+                    //the normal way to store detailed data into a intent
                     Intent intent = new Intent(context, DetailActivity.class);
+                    intent.putExtras(bundleToDetail);
                     intent.putExtra("posterUrltodetailpage",mValues.get(position));
                     intent.putExtra("movie_id_todetailpage",movieIdList.get(position));
-                    intent.putExtra("jsonData", jsonData);
+
+                    Log.d("Movie positon is",String.valueOf(position));
                     context.startActivity(intent);
                 }
             });
