@@ -11,7 +11,7 @@
 
 
   <android.support.design.widget.AppBarLayout
-      android:id="@+id/appbar"
+      android:id="@+id/appbar_detail"
       android:layout_width="match_parent"
       android:layout_height="256dp"
       android:fitsSystemWindows="true"
@@ -92,6 +92,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+
 
           <TextView
               android:layout_width="match_parent"
@@ -182,10 +184,9 @@
           <TextView
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:text="Movie Video"
+              android:text="Video"
               android:textSize="25sp"
               android:textStyle="bold"
-
               />
 
 
@@ -193,23 +194,24 @@
       </android.support.v7.widget.CardView>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     </LinearLayout>
 
 
   </android.support.v4.widget.NestedScrollView>
+
+  <android.support.design.widget.FloatingActionButton
+      android:id="@+id/favorite_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:src="@drawable/favorite"
+      android:clickable="true"
+      android:layout_gravity="right"
+      app:layout_anchor="@id/appbar_detail"
+      app:layout_anchorGravity="bottom|end|right"
+      app:fabSize="mini"
+      app:backgroundTint="@color/cardview_light_background"
+      app:backgroundTintMode="src_in"
+      />
 
 
 

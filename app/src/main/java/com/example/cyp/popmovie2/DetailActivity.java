@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -19,6 +22,7 @@ import java.util.ArrayList;
  * Created by apple on 16/5/5.
  */
 public class DetailActivity extends AppCompatActivity {
+
 
     private String movieTitle;
     private int moviePosition;
@@ -40,6 +44,7 @@ public class DetailActivity extends AppCompatActivity {
         Fresco.initialize(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
 
         movieText = (TextView) findViewById(R.id.overview_text);
         vote_average = (TextView) findViewById(R.id.vote_average_info);
@@ -71,11 +76,19 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbarDetail);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         CollapsingToolbarLayout coToolbar = (CollapsingToolbarLayout) findViewById(R.id.coToolbar);
         //Set the title of toolbar
         coToolbar.setTitle(movieTitle);
         //How to set the color and style of title ?
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.favorite_button);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(v.getContext(), "Add to My Favorite Movie List", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         backDrop = (SimpleDraweeView) findViewById(R.id.detail_backdrop);
 
