@@ -4,18 +4,18 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/popmovie2_launcher"
             android:title="home"
             />
 
         <item
             android:id="@+id/nav_message"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/popmovie2_launcher"
             android:title="Message"
             />
         <item
             android:id="@+id/nav_friends"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/popmovie2_launcher"
             android:title="Friends"
             />
     </group>
@@ -29,13 +29,13 @@
 
             <item
                 android:id="@+id/nav_web"
-                android:icon="@mipmap/ic_launcher"
+                android:icon="@mipmap/popmovie2_launcher"
                 android:title="WebView"
                 />
 
             <item
                 android:id="@+id/nav_phonecall"
-                android:icon="@mipmap/ic_launcher"
+                android:icon="@mipmap/popmovie2_launcher"
                 android:title="Phone Call"
                 />
 
