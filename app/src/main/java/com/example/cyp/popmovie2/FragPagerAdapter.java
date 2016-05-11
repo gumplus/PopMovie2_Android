@@ -16,7 +16,7 @@ public class FragPagerAdapter extends FragmentPagerAdapter {
 
     private final List<Fragment> mFragments = new ArrayList<>();
     private final List<String> mFragmentTitles = new ArrayList<>();
-    private static int NUM_ITEMS = 2;
+
 
     public FragPagerAdapter(FragmentManager fm) {
         super(fm);

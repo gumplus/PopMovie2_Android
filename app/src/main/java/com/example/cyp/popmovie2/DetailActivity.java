@@ -24,7 +24,10 @@ public class DetailActivity extends AppCompatActivity {
     private int moviePosition;
 
     public SimpleDraweeView backDrop;
-    public TextView movieText;
+    private TextView movieText;
+    private TextView vote_average;
+    private TextView release_date;
+
     private String posterDetailUrl;
     private int movieId;
 
@@ -39,6 +42,8 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         movieText = (TextView) findViewById(R.id.overview_text);
+        vote_average = (TextView) findViewById(R.id.vote_average_info);
+        release_date = (TextView) findViewById(R.id.release_date_info);
 
         //normal way to get data via intent.putExtra function
         Intent intent = getIntent();
@@ -51,6 +56,10 @@ public class DetailActivity extends AppCompatActivity {
         resultsDetailpage = jsonBeanReceived.getResults();
         moviePosition = savedInstanceState.getInt("position");
         movieTitle = resultsDetailpage.get(moviePosition).getTitle();
+
+        movieText.setText(resultsDetailpage.get(moviePosition).getOverview());
+        vote_average.setText("vote_average : " + String.valueOf(resultsDetailpage.get(moviePosition).getVote_average()));
+        release_date.setText("release_date : " + resultsDetailpage.get(moviePosition).getRelease_date());
 
         Log.d("Received jsonData", String.valueOf(jsonBeanReceived));
         Log.d("movieId", String.valueOf(movieId));
@@ -67,15 +76,10 @@ public class DetailActivity extends AppCompatActivity {
         coToolbar.setTitle(movieTitle);
         //How to set the color and style of title ?
 
-//        detailPostView = (SimpleDraweeView) findViewById(R.id.detail_fresco);
+
         backDrop = (SimpleDraweeView) findViewById(R.id.detail_backdrop);
 
-
-
-
-
         Uri uri = Uri.parse(posterDetailUrl);
-
         backDrop.setImageURI(uri);
 
     }

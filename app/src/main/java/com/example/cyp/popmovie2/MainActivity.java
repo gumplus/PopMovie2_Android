@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
 
+
     private final String api_key = "?api_key=92741aee53714cbe1a7d87fc658bbaad";
 
     //the base api of popular
@@ -181,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         // add fragment into adpter
         adapter.addFragment(MovieListFragment.newInstance(bundle), "Most Popular");
         adapter.addFragment(MovieListFragment.newInstance(bundle), "Top Rated");
-//        adapter.addFragment(MovieListFragment.newInstance(bundle), "Tab 3");
+        adapter.addFragment(MovieListFragment.newInstance(bundle), "My Favorite");
 
         viewpager.setAdapter(adapter);
     }
