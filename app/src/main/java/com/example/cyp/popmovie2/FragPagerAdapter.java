@@ -14,8 +14,9 @@ import java.util.List;
 //Custom FragmentPagerAdapter for adding fragments
 public class FragPagerAdapter extends FragmentPagerAdapter {
 
-    private final List<Fragment> mFragments = new ArrayList<>();
-    private final List<String> mFragmentTitles = new ArrayList<>();
+    private List<Fragment> mFragments = new ArrayList<>();
+    private List<String> mFragmentTitles = new ArrayList<>();
+//    private static int NUM_ITEMS = 3;
 
 
     public FragPagerAdapter(FragmentManager fm) {
@@ -29,12 +30,23 @@ public class FragPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+//        switch (position) {
+//            case 0:
+//                return MovieListFragment.newInstance(bundle);
+//            case 1:
+//                return MovieListFragment.newInstance(bundle);
+//            case 2:
+//                return MovieListFragment.newInstance(bundle);
+//            default:
+//                return null;
+//        }
         return mFragments.get(position);
     }
 
     @Override
     public int getCount() {
         return mFragments.size();
+//        return NUM_ITEMS;
     }
 
     @Override

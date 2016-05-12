@@ -23,6 +23,7 @@ import java.util.ArrayList;
  */
 public class DetailActivity extends AppCompatActivity {
 
+    private static String videoAPi = "http://api.themoviedb.org/3/movie/id/videos";
 
     private String movieTitle;
     private int moviePosition;
@@ -62,14 +63,13 @@ public class DetailActivity extends AppCompatActivity {
         moviePosition = savedInstanceState.getInt("position");
         movieTitle = resultsDetailpage.get(moviePosition).getTitle();
 
+        //set the detailed info of movie
         movieText.setText(resultsDetailpage.get(moviePosition).getOverview());
         vote_average.setText("vote_average : " + String.valueOf(resultsDetailpage.get(moviePosition).getVote_average()));
         release_date.setText("release_date : " + resultsDetailpage.get(moviePosition).getRelease_date());
 
         Log.d("Received jsonData", String.valueOf(jsonBeanReceived));
         Log.d("movieId", String.valueOf(movieId));
-
-
 
 
         Toolbar toolbarDetail = (Toolbar) findViewById(R.id.detail_toolbar);

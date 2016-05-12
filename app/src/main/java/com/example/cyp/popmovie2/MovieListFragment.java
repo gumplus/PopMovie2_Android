@@ -15,8 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by cyp via apple on 16/5/5.
@@ -28,12 +36,22 @@ import java.util.ArrayList;
  */
 public class MovieListFragment extends Fragment {
 
-    private ArrayList<String> posterUrls;
+    private final String api_key = "?api_key=92741aee53714cbe1a7d87fc658bbaad";
 
-    private static ArrayList<Integer> movieIdList;
+    private String posterBaseUrl = "http://image.tmdb.org/t/p/w185";
+    private String posterPath;
+    private int movieId;
 
-    public static JsonBean jsonData = new JsonBean();
+    public static JsonBean jsonTransfer = new JsonBean();
+    private ArrayList<JsonBean.Results> resultList;
 
+    private OkHttpClient okhttp = new OkHttpClient();
+    private Gson gson = new Gson();
+    //the base api of popular or topRatedApi
+    private static String whichApi;
+
+    public ArrayList<String> posterUrlsList;
+    public static ArrayList<Integer> movieIdList;
 
     @Nullable
     @Override
@@ -43,38 +61,71 @@ public class MovieListFragment extends Fragment {
 
         //put the recyclerView into the container of MovieListFragment
         RecyclerView rv = (RecyclerView) inflater.inflate(R.layout.fragment_movie_list, container, false);
-
+        parseApi(whichApi);
         setupRecyclerView(rv);
         return rv;
     }
 
+
+    private void parseApi(String whichApi) {
+
+        Request request = new Request.Builder()
+                .url(whichApi + api_key)
+                .build();
+
+        okhttp.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                try {
+                    if(!response.isSuccessful()) throw new IOException("Wrong Code" + response);
+                    jsonTransfer = gson.fromJson(response.body().string(), JsonBean.class);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                resultList = jsonTransfer.getResults();
+                if (resultList != null) {
+                    Log.d("resultList","is not null");
+                }
+
+                for (int i = 0; i < resultList.size();i++) {
+
+                    posterPath = resultList.get(i).getPoster_path();
+                    posterUrlsList.add(posterBaseUrl + posterPath);
+
+                    movieId = resultList.get(i).getId();
+                    movieIdList.add(movieId);
+                }
+
+            }
+        });
+    }
     
 
     private void setupRecyclerView(RecyclerView recyclerView) {
 
-        Bundle bundle = getArguments();
-        posterUrls = bundle.getStringArrayList("movie_urls");
-        movieIdList = bundle.getIntegerArrayList("movie_id");
-
-        jsonData =  bundle.getParcelable("jsonbean_key");
-
-        //test
-        if(jsonData != null ){
-            Log.d("jsonData","is not null");
-            ArrayList<JsonBean.Results> resultList = jsonData.getResults();
-        }
 
 
         recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(), 2));
 
-        recyclerView.setAdapter(new MovieViewAdapter(getActivity(), posterUrls));
+        if(posterUrlsList != null) {
+            Log.d("posterUrlsList", "is not null");
+        }
+        recyclerView.setAdapter(new MovieViewAdapter(getActivity(), posterUrlsList));
     }
 
 
     // return my custom fragment
-    public static MovieListFragment newInstance(Bundle args) {
+
+    public static MovieListFragment newInstance(String Api) {
+        whichApi = Api;
         MovieListFragment mlf = new MovieListFragment();
-        mlf.setArguments(args);
         return mlf;
     }
 
@@ -90,7 +141,7 @@ public class MovieListFragment extends Fragment {
         public MovieViewAdapter(Context context,ArrayList<String> movieUrls) {
 
             mValues = movieUrls;
-            Log.d("mValues",mValues.toString());
+            Log.d("mValues",String.valueOf(mValues));
 
             //get Theme
             context.getTheme().resolveAttribute(R.attr.selectableItemBackground, mTypeValue, true);
@@ -111,13 +162,8 @@ public class MovieListFragment extends Fragment {
                 super(view);
                 mView = view;
 
-//                The imageView for Glide below
-//                mImageView = (ImageView) view.findViewById(R.id.list_movie_poster);
-
                 draweeView = (SimpleDraweeView) view.findViewById(R.id.list_image_poster);
-
             }
-
         }
 
 
@@ -142,9 +188,6 @@ public class MovieListFragment extends Fragment {
 
                 Log.d("mValues.get(i)", mValues.get(position));
 
-//            // And Now I replace of Glide libs with Fresco.
-//            Glide.with(viewHolder.mImageView.getContext())
-//                    .load(mValues.get(position)).fitCenter().into(viewHolder.mImageView);
 
             Uri uri = Uri.parse(mValues.get(position));
             viewHolder.draweeView.setImageURI(uri);
@@ -159,7 +202,7 @@ public class MovieListFragment extends Fragment {
                     //store jsonData into a bundle
                     Bundle bundleToDetail = new Bundle();
                     bundleToDetail.putInt("position", position);
-                    bundleToDetail.putParcelable("jsonData", jsonData);
+                    bundleToDetail.putParcelable("jsonData", jsonTransfer);
 
                     //the normal way to store detailed data into a intent
                     Intent intent = new Intent(context, DetailActivity.class);
@@ -179,12 +222,7 @@ public class MovieListFragment extends Fragment {
         public int getItemCount() {
             return mValues.size();
         }
+
     }
-
-
-
-
-
-
 
 }
