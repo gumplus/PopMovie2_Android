@@ -86,6 +86,9 @@ public class DetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // store the selected JsonBean Object into SQL
+
                 Toast.makeText(v.getContext(), "Add to My Favorite Movie List", Toast.LENGTH_SHORT).show();
             }
         });

@@ -36,21 +36,24 @@ import okhttp3.Response;
 public class MovieListFragment extends Fragment {
 
     private final String api_key = "?api_key=92741aee53714cbe1a7d87fc658bbaad";
+    private final String apiFromPop = "http://api.themoviedb.org/3/movie/popular";
+    private final String apifromRated = "http://api.themoviedb.org/3/movie/top_rated";
 
     private String posterBaseUrl = "http://image.tmdb.org/t/p/w185";
     private String posterPath;
-    private int movieId;
+//    private int movieId;
 
     public static JsonBean jsonTransfer = new JsonBean();
-    private ArrayList<JsonBean.Results> resultList;
+//    public static JsonBean popJson = new JsonBean();
+//    public static JsonBean ratedJson = new JsonBean();
 
-    private OkHttpClient okhttp = new OkHttpClient();
+
+
+    private OkHttpClient okHttp = new OkHttpClient();
     private Gson gson = new Gson();
     //the base api of popular or topRatedApi
     private static String whichApi;
 
-    public ArrayList<String> posterUrlsList;
-    public static ArrayList<Integer> movieIdList;
     private RecyclerView rv;
 
     @Nullable
@@ -63,17 +66,18 @@ public class MovieListFragment extends Fragment {
         rv = (RecyclerView) inflater.inflate(R.layout.fragment_movie_list, container, false);
         parseApi(whichApi);
 
+        setupRecyclerView(rv);
         return rv;
     }
 
 
-    private void parseApi(String whichApi) {
+    private void parseApi(final String whichApi) {
 
         Request request = new Request.Builder()
                 .url(whichApi + api_key)
                 .build();
 
-        okhttp.newCall(request).enqueue(new Callback() {
+        okHttp.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
@@ -89,24 +93,16 @@ public class MovieListFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                resultList = jsonTransfer.getResults();
-                if (resultList != null) {
-                    Log.d("resultList","is not null");
-                }
+//                switch (whichApi) {
+//                    case apiFromPop:
+//                        popJson = jsonTransfer;
+//                    case apifromRated:
+//                        ratedJson = jsonTransfer;
+//                    default:
+//                        Log.d("whichAPi","is wrong.");
+//                        break;
+//                }
 
-                for (int i = 0; i < resultList.size();i++) {
-
-                    posterPath = resultList.get(i).getPoster_path();
-                    posterUrlsList.add(posterBaseUrl + posterPath);
-
-                    movieId = resultList.get(i).getId();
-                    movieIdList.add(movieId);
-                    if (movieIdList != null) {
-                        Log.d("movieIdList","is not null");
-                    }
-                }
-
-                setupRecyclerView(rv);
             }
         });
 
@@ -116,7 +112,26 @@ public class MovieListFragment extends Fragment {
 
     private void setupRecyclerView(RecyclerView recyclerView) {
 
+        ArrayList<String> posterUrlsList = new ArrayList<>();
+//        ArrayList<Integer> movieIdList = new ArrayList<>();
+        ArrayList<JsonBean.Results> resultList;
 
+        resultList = jsonTransfer.getResults();
+        if (resultList != null) {
+            Log.d("resultList","is not null");
+        }
+
+        for (int i = 0; i < resultList.size();i++) {
+
+            posterPath = resultList.get(i).getPoster_path();
+            posterUrlsList.add(posterBaseUrl + posterPath);
+
+//            movieId = resultList.get(i).getId();
+//            movieIdList.add(movieId);
+//            if (movieIdList != null) {
+//                Log.d("movieIdList","is not null");
+//            }
+        }
 
         recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(), 2));
 
@@ -160,7 +175,7 @@ public class MovieListFragment extends Fragment {
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
-//            public final ImageView mImageView;
+
             public final SimpleDraweeView draweeView;
 
 
@@ -207,6 +222,7 @@ public class MovieListFragment extends Fragment {
 
                     //store jsonData into a bundle
                     Bundle bundleToDetail = new Bundle();
+                    // store MovieID into a bundle
                     bundleToDetail.putInt("position", position);
                     bundleToDetail.putParcelable("jsonData", jsonTransfer);
 
@@ -214,7 +230,7 @@ public class MovieListFragment extends Fragment {
                     Intent intent = new Intent(context, DetailActivity.class);
                     intent.putExtras(bundleToDetail);
                     intent.putExtra("posterUrltodetailpage",mValues.get(position));
-                    intent.putExtra("movie_id_todetailpage",movieIdList.get(position));
+//                    intent.putExtra("movie_id_todetailpage",movieIdList.get(position));
 
                     Log.d("Movie positon is",String.valueOf(position));
                     context.startActivity(intent);

@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         // add fragment into adpter
         adapter.addFragment(MovieListFragment.newInstance(popApi), "Most Popular");
-//        adapter.addFragment(MovieListFragment.newInstance(ratedBean), "Top Rated");
+        adapter.addFragment(MovieListFragment.newInstance(topRatedAPi), "Top Rated");
         adapter.addFragment(MovieListFragment.newInstance(topRatedAPi), "My Favorite");
 
         viewpager.setAdapter(adapter);
