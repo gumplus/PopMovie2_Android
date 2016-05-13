@@ -101,6 +101,9 @@ public class MovieListFragment extends Fragment {
 
                     movieId = resultList.get(i).getId();
                     movieIdList.add(movieId);
+                    if (movieIdList != null) {
+                        Log.d("movieIdList","is not null");
+                    }
                 }
 
                 setupRecyclerView(rv);
