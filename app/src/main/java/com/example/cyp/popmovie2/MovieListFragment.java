@@ -28,7 +28,6 @@ import okhttp3.Response;
 
 /**
  * Created by cyp via apple on 16/5/5.
- *学习的根本，是如何处理信息的能力，也就是对现象的分析，归纳和延伸的能力。
  * What
  * When
  * Why
@@ -52,6 +51,7 @@ public class MovieListFragment extends Fragment {
 
     public ArrayList<String> posterUrlsList;
     public static ArrayList<Integer> movieIdList;
+    private RecyclerView rv;
 
     @Nullable
     @Override
@@ -60,9 +60,9 @@ public class MovieListFragment extends Fragment {
 
 
         //put the recyclerView into the container of MovieListFragment
-        RecyclerView rv = (RecyclerView) inflater.inflate(R.layout.fragment_movie_list, container, false);
+        rv = (RecyclerView) inflater.inflate(R.layout.fragment_movie_list, container, false);
         parseApi(whichApi);
-        setupRecyclerView(rv);
+
         return rv;
     }
 
@@ -103,8 +103,11 @@ public class MovieListFragment extends Fragment {
                     movieIdList.add(movieId);
                 }
 
+                setupRecyclerView(rv);
             }
         });
+
+
     }
     
 
