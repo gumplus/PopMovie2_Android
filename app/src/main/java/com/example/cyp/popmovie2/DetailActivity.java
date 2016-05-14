@@ -10,35 +10,58 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by apple on 16/5/5.
  */
 public class DetailActivity extends AppCompatActivity {
 
-    private static String videoAPi = "http://api.themoviedb.org/3/movie/id/videos";
+    private static String videoApi = "http://api.themoviedb.org/3/movie/";
+    private final String video_api_key = "/videos?api_key=92741aee53714cbe1a7d87fc658bbaad";
+
+    // videoApi+id+video_api_key
+    // https://www.youtube.com/watch?v=videoKey
+    //videoKey = videoBean.getResults().getKey();
 
     private String movieTitle;
     private int moviePosition;
+    private String videoApiUrl;
+
 
     public SimpleDraweeView backDrop;
     private TextView movieText;
     private TextView vote_average;
     private TextView release_date;
+    private TextView videoText;
+    private ImageView trailerPlay;
 
     private String posterDetailUrl;
     private int movieId;
 
+    private OkHttpClient okHttpClient = new OkHttpClient();
+    private Gson gsonDetail = new Gson();
     public JsonBean jsonBeanReceived;
-
+    private VideoBean videoBean = new VideoBean();
     private ArrayList<JsonBean.Results> resultsDetailpage = new ArrayList<>();
+    private ArrayList<VideoBean.VideoResults> resultsVideo = new ArrayList<>();
+    private String videoKey;
+    private String playUrl ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +73,8 @@ public class DetailActivity extends AppCompatActivity {
         movieText = (TextView) findViewById(R.id.overview_text);
         vote_average = (TextView) findViewById(R.id.vote_average_info);
         release_date = (TextView) findViewById(R.id.release_date_info);
+        videoText = (TextView) findViewById(R.id.video_text);
+        trailerPlay = (ImageView) findViewById(R.id.trailer_play);
 
         //normal way to get data via intent.putExtra function
         Intent intent = getIntent();
@@ -62,6 +87,7 @@ public class DetailActivity extends AppCompatActivity {
         resultsDetailpage = jsonBeanReceived.getResults();
         moviePosition = savedInstanceState.getInt("position");
         movieTitle = resultsDetailpage.get(moviePosition).getTitle();
+        movieId = resultsDetailpage.get(moviePosition).getId();
 
         //set the detailed info of movie
         movieText.setText(resultsDetailpage.get(moviePosition).getOverview());
@@ -98,7 +124,51 @@ public class DetailActivity extends AppCompatActivity {
         Uri uri = Uri.parse(posterDetailUrl);
         backDrop.setImageURI(uri);
 
+        trailerPlay();
+
     }
+
+    private void trailerPlay() {
+        // videoApi+id+video_api_key
+        videoApiUrl = videoApi + movieId + video_api_key;
+
+        Request requestTrailer = new Request.Builder().url(videoApiUrl).build();
+
+        okHttpClient.newCall(requestTrailer).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                try {
+                    if(!response.isSuccessful()) throw new IOException("Wrong Response for Trailer Play" + response);
+                    videoBean = gsonDetail.fromJson(response.body().string(), VideoBean.class);
+                    resultsVideo = videoBean.getResults();
+                    videoKey = resultsVideo.get(0).getKey();
+                    Log.d("videoKey is ", videoKey);
+                    playUrl = "https://www.youtube.com/watch?v=" + videoKey;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+        trailerPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentPlay = new Intent(Intent.ACTION_VIEW);
+                intentPlay.setData(Uri.parse(playUrl));
+                startActivity(intentPlay);
+            }
+        });
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

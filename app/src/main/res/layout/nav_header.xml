@@ -13,7 +13,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="电影汇"
+        android:text="Pop Movie 2"
         android:textSize="20sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         />

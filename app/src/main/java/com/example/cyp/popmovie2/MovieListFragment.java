@@ -40,13 +40,10 @@ public class MovieListFragment extends Fragment {
     private final String apifromRated = "http://api.themoviedb.org/3/movie/top_rated";
 
     private String posterBaseUrl = "http://image.tmdb.org/t/p/w185";
-    private String posterPath;
+
 //    private int movieId;
 
     public static JsonBean jsonTransfer = new JsonBean();
-//    public static JsonBean popJson = new JsonBean();
-//    public static JsonBean ratedJson = new JsonBean();
-
 
 
     private OkHttpClient okHttp = new OkHttpClient();
@@ -71,7 +68,18 @@ public class MovieListFragment extends Fragment {
     }
 
 
-    private void parseApi(final String whichApi) {
+    public static MovieListFragment newInstance(String Api) {
+        whichApi = Api;
+//
+//        Bundle args = new Bundle();
+//        args.putBundle("bundlefromMain", args);
+
+        MovieListFragment mlf = new MovieListFragment();
+//        mlf.setArguments(args);
+        return mlf;
+    }
+
+    private void parseApi(String whichApi) {
 
         Request request = new Request.Builder()
                 .url(whichApi + api_key)
@@ -108,13 +116,13 @@ public class MovieListFragment extends Fragment {
 
 
     }
-    
+
 
     private void setupRecyclerView(RecyclerView recyclerView) {
 
         ArrayList<String> posterUrlsList = new ArrayList<>();
-//        ArrayList<Integer> movieIdList = new ArrayList<>();
         ArrayList<JsonBean.Results> resultList;
+        String posterPath;
 
         resultList = jsonTransfer.getResults();
         if (resultList != null) {
@@ -141,14 +149,6 @@ public class MovieListFragment extends Fragment {
         recyclerView.setAdapter(new MovieViewAdapter(getActivity(), posterUrlsList));
     }
 
-
-    // return my custom fragment
-
-    public static MovieListFragment newInstance(String Api) {
-        whichApi = Api;
-        MovieListFragment mlf = new MovieListFragment();
-        return mlf;
-    }
 
     //My Custom RecyclerView Adapter
 
