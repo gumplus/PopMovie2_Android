@@ -82,7 +82,7 @@ public class MovieListFragment extends Fragment {
     private void parseApi(String whichApi) {
 
         Request request = new Request.Builder()
-                .url(whichApi + api_key)
+                .url(whichApi + api_key + "&page=2")
                 .build();
 
         okHttp.newCall(request).enqueue(new Callback() {
@@ -100,16 +100,6 @@ public class MovieListFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-//                switch (whichApi) {
-//                    case apiFromPop:
-//                        popJson = jsonTransfer;
-//                    case apifromRated:
-//                        ratedJson = jsonTransfer;
-//                    default:
-//                        Log.d("whichAPi","is wrong.");
-//                        break;
-//                }
 
             }
         });
@@ -134,11 +124,6 @@ public class MovieListFragment extends Fragment {
             posterPath = resultList.get(i).getPoster_path();
             posterUrlsList.add(posterBaseUrl + posterPath);
 
-//            movieId = resultList.get(i).getId();
-//            movieIdList.add(movieId);
-//            if (movieIdList != null) {
-//                Log.d("movieIdList","is not null");
-//            }
         }
 
         recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(), 2));
@@ -207,7 +192,7 @@ public class MovieListFragment extends Fragment {
         public void onBindViewHolder(ViewHolder viewHolder, final int position) {
 
 
-                Log.d("mValues.get(i)", mValues.get(position));
+            Log.d("mValues.get(i)", mValues.get(position));
 
 
             Uri uri = Uri.parse(mValues.get(position));

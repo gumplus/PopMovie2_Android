@@ -25,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
     //the base api of toprated
     private String topRatedAPi = "http://api.themoviedb.org/3/movie/top_rated";
 
+    //https://api.themoviedb.org/3movie?api_key=API_KEY&page=2
+
+
 
 
     @Override

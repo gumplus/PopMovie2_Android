@@ -1,6 +1,8 @@
 package com.example.cyp.popmovie2;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -48,7 +50,6 @@ public class DetailActivity extends AppCompatActivity {
     private TextView movieText;
     private TextView vote_average;
     private TextView release_date;
-    private TextView videoText;
     private ImageView trailerPlay;
 
     private String posterDetailUrl;
@@ -63,6 +64,8 @@ public class DetailActivity extends AppCompatActivity {
     private String videoKey;
     private String playUrl ;
 
+    private DatabaseHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Fresco.initialize(this);
@@ -73,8 +76,9 @@ public class DetailActivity extends AppCompatActivity {
         movieText = (TextView) findViewById(R.id.overview_text);
         vote_average = (TextView) findViewById(R.id.vote_average_info);
         release_date = (TextView) findViewById(R.id.release_date_info);
-        videoText = (TextView) findViewById(R.id.video_text);
         trailerPlay = (ImageView) findViewById(R.id.trailer_play);
+
+        dbHelper = new DatabaseHelper(this, "Movie", null, 1);
 
         //normal way to get data via intent.putExtra function
         Intent intent = getIntent();
@@ -113,7 +117,14 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
                 // store the selected JsonBean Object into SQL
+                ContentValues values = new ContentValues();
+                values.put("movieId", movieId);
+//                values.put("jsonData", jsonBeanReceived);
+                values.put("movieTitle", movieTitle);
+                values.put("moviePosition", moviePosition);
+                db.insert("Movie", null, values);
 
                 Toast.makeText(v.getContext(), "Add to My Favorite Movie List", Toast.LENGTH_SHORT).show();
             }
@@ -172,7 +183,7 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-       getMenuInflater().inflate(R.menu.action_menu,menu);
+        getMenuInflater().inflate(R.menu.action_menu,menu);
         return true;
     }
 
