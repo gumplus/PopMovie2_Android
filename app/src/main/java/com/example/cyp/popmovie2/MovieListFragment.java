@@ -36,31 +36,43 @@ import okhttp3.Response;
 public class MovieListFragment extends Fragment {
 
     private final String api_key = "?api_key=92741aee53714cbe1a7d87fc658bbaad";
-    private final String apiFromPop = "http://api.themoviedb.org/3/movie/popular";
-    private final String apifromRated = "http://api.themoviedb.org/3/movie/top_rated";
+    private final String posterBaseUrl = "http://image.tmdb.org/t/p/w185";
 
-    private String posterBaseUrl = "http://image.tmdb.org/t/p/w185";
-
-//    private int movieId;
-
-    public static JsonBean jsonTransfer = new JsonBean();
-
+    private static JsonBean jsonTransfer = new JsonBean();
 
     private OkHttpClient okHttp = new OkHttpClient();
     private Gson gson = new Gson();
     //the base api of popular or topRatedApi
-    private static String whichApi;
+    private String whichApi;
 
     private RecyclerView rv;
 
+    //newInstance constructor for creating fragment with arguments
+    public static MovieListFragment newInstance(String api) {
+
+        MovieListFragment mlf = new MovieListFragment();
+        Bundle args = new Bundle();
+        args.putString("whichApi", api);
+        mlf.setArguments(args);
+        return mlf;
+    }
+    // Store instance variables based on arguments passed
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
     @Nullable
     @Override
-
+    // Inflate the view for the fragment based on layout XML
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
 
 
         //put the recyclerView into the container of MovieListFragment
         rv = (RecyclerView) inflater.inflate(R.layout.fragment_movie_list, container, false);
+
+        this.whichApi = getArguments().getString("whichApi");
         parseApi(whichApi);
 
         setupRecyclerView(rv);
@@ -68,21 +80,12 @@ public class MovieListFragment extends Fragment {
     }
 
 
-    public static MovieListFragment newInstance(String Api) {
-        whichApi = Api;
-//
-//        Bundle args = new Bundle();
-//        args.putBundle("bundlefromMain", args);
 
-        MovieListFragment mlf = new MovieListFragment();
-//        mlf.setArguments(args);
-        return mlf;
-    }
 
-    private void parseApi(String whichApi) {
+    private void parseApi(String api) {
 
         Request request = new Request.Builder()
-                .url(whichApi + api_key + "&page=2")
+                .url(whichApi + api_key + "&page=1")
                 .build();
 
         okHttp.newCall(request).enqueue(new Callback() {
@@ -105,33 +108,45 @@ public class MovieListFragment extends Fragment {
         });
 
 
+
     }
 
 
     private void setupRecyclerView(RecyclerView recyclerView) {
 
-        ArrayList<String> posterUrlsList = new ArrayList<>();
         ArrayList<JsonBean.Results> resultList;
+        ArrayList<String> posterUrlsList = new ArrayList<>();
+
+        //必须要初始化resultList 才具有内存空间，不然resultList会出现Null Object
+
         String posterPath;
 
         resultList = jsonTransfer.getResults();
-        if (resultList != null) {
-            Log.d("resultList","is not null");
-        }
 
-        for (int i = 0; i < resultList.size();i++) {
-
-            posterPath = resultList.get(i).getPoster_path();
-            posterUrlsList.add(posterBaseUrl + posterPath);
+        if (resultList == null) {
+            Log.d("resultList","is  null now");
 
         }
 
-        recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(), 2));
+        try {
+            for (int i = 0; i < resultList.size(); i++) {
+                posterPath = resultList.get(i).getPoster_path();
+                posterUrlsList.add(posterBaseUrl + posterPath);
+            }
 
-        if(posterUrlsList != null) {
-            Log.d("posterUrlsList", "is not null");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        recyclerView.setAdapter(new MovieViewAdapter(getActivity(), posterUrlsList));
+
+            recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(), 2));
+
+            if(posterUrlsList != null) {
+                Log.d("posterUrlsList", "is not null");
+            }
+            recyclerView.setAdapter(new MovieViewAdapter(getActivity(), posterUrlsList));
+
+
+
     }
 
 
@@ -157,17 +172,13 @@ public class MovieListFragment extends Fragment {
         }
 
 
-
         public static class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
-
             public final SimpleDraweeView draweeView;
-
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-
                 draweeView = (SimpleDraweeView) view.findViewById(R.id.list_image_poster);
             }
         }

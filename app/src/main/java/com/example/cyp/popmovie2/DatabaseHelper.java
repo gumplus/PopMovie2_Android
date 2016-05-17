@@ -14,15 +14,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String CREATE_MovieBase = "create table Movie ("
             + "id integer primary key autoincrement, "
-            + "movieTitle text, "
-            + "jsonData BLOB, "
-            + "movieId integer, "
-            + "moviePosition integer)";
+            + "posterUrl String, "
+            + "title String, "
+            + "overview String, "
+            + "vote_average double, "
+            + "release_date String, "
+            + "movieId integer)";
 
     public DatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory cursorFactory, int version) {
         super(context, name ,cursorFactory, version);
         mContext = context;
     }
+
 
     @Override
     public void onCreate(SQLiteDatabase db) {

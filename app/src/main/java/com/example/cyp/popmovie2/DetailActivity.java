@@ -57,10 +57,11 @@ public class DetailActivity extends AppCompatActivity {
 
     private OkHttpClient okHttpClient = new OkHttpClient();
     private Gson gsonDetail = new Gson();
-    public JsonBean jsonBeanReceived;
+    private JsonBean BeanReceived;
+
     private VideoBean videoBean = new VideoBean();
-    private ArrayList<JsonBean.Results> resultsDetailpage = new ArrayList<>();
-    private ArrayList<VideoBean.VideoResults> resultsVideo = new ArrayList<>();
+    private ArrayList<JsonBean.Results> resultsDetailpage;
+    private ArrayList<VideoBean.VideoResults> resultsVideo;
     private String videoKey;
     private String playUrl ;
 
@@ -78,7 +79,9 @@ public class DetailActivity extends AppCompatActivity {
         release_date = (TextView) findViewById(R.id.release_date_info);
         trailerPlay = (ImageView) findViewById(R.id.trailer_play);
 
-        dbHelper = new DatabaseHelper(this, "Movie", null, 1);
+        dbHelper = new DatabaseHelper(this, "MovieId.db", null, 1);
+        resultsDetailpage = new ArrayList<>();
+        resultsVideo = new ArrayList<>();
 
         //normal way to get data via intent.putExtra function
         Intent intent = getIntent();
@@ -87,18 +90,19 @@ public class DetailActivity extends AppCompatActivity {
         posterDetailUrl = intent.getStringExtra("posterUrltodetailpage");
 
         //get the jsonBean,results,position from the view of selected movie [Parcelable way]
-        jsonBeanReceived = intent.getParcelableExtra("jsonData");
-        resultsDetailpage = jsonBeanReceived.getResults();
+        BeanReceived = intent.getParcelableExtra("jsonData");
+        resultsDetailpage = BeanReceived.getResults();
+
         moviePosition = savedInstanceState.getInt("position");
+
         movieTitle = resultsDetailpage.get(moviePosition).getTitle();
         movieId = resultsDetailpage.get(moviePosition).getId();
-
         //set the detailed info of movie
         movieText.setText(resultsDetailpage.get(moviePosition).getOverview());
         vote_average.setText("vote_average : " + String.valueOf(resultsDetailpage.get(moviePosition).getVote_average()));
         release_date.setText("release_date : " + resultsDetailpage.get(moviePosition).getRelease_date());
 
-        Log.d("Received jsonData", String.valueOf(jsonBeanReceived));
+        Log.d("Received jsonData", String.valueOf(BeanReceived));
         Log.d("movieId", String.valueOf(movieId));
 
 
@@ -116,17 +120,28 @@ public class DetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // store the selected JsonBean Object into SQL
+
+//                + "id integer primary key autoincrement, "
+//                        + "posterUrl, "
+//                        + "title, "
+//                        + "overview, "
+//                        + "vote_average, "
+//                        + "release_date, "
+//                        + "movieId integer)";
 
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
-                // store the selected JsonBean Object into SQL
                 ContentValues values = new ContentValues();
+                values.put("posterUrl", posterDetailUrl);
+                values.put("title", movieTitle);
+                values.put("overview", resultsDetailpage.get(moviePosition).getOverview());
+                values.put("vote_average", resultsDetailpage.get(moviePosition).getVote_average());
+                values.put("release_date", resultsDetailpage.get(moviePosition).getRelease_date());
                 values.put("movieId", movieId);
-//                values.put("jsonData", jsonBeanReceived);
-                values.put("movieTitle", movieTitle);
-                values.put("moviePosition", moviePosition);
+
                 db.insert("Movie", null, values);
 
-                Toast.makeText(v.getContext(), "Add to My Favorite Movie List", Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "Collect the movie: " + movieTitle, Toast.LENGTH_SHORT).show();
             }
         });
 

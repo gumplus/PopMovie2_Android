@@ -128,8 +128,6 @@ public class JsonBean implements Parcelable {
         }
 
 
-
-
         //ArrayList<Results> to be Parcelable
 
         private Results(Parcel in) {
@@ -180,7 +178,6 @@ public class JsonBean implements Parcelable {
 
     public JsonBean(Parcel in) {
         this.page = in.readInt();
-//        this.results = new ArrayList<>();
         in.readTypedList(results, Results.CREATOR);
     }
 

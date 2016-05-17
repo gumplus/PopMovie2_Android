@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         Fresco.initialize(this);
         super.onCreate(savedInstanceState);
 
@@ -85,10 +86,11 @@ public class MainActivity extends AppCompatActivity {
 
         FragPagerAdapter adapter = new FragPagerAdapter(getSupportFragmentManager());
 
+        int vpagerPosition = adapter.getItemPosition(adapter);
         // add fragment into adpter
-        adapter.addFragment(MovieListFragment.newInstance(popApi), "Most Popular");
-        adapter.addFragment(MovieListFragment.newInstance(topRatedAPi), "Top Rated");
-        adapter.addFragment(MovieListFragment.newInstance(topRatedAPi), "My Favorite");
+//        adapter.addFragment(MovieListFragment.newInstance(popApi), "Most Popular");
+//        adapter.addFragment(MovieListFragment.newInstance(topRatedAPi), "Top Rated");
+//        adapter.addFragment(MovieListFragment.newInstance(topRatedAPi), "My Favorite");
 
         viewpager.setAdapter(adapter);
     }
