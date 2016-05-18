@@ -15,7 +15,7 @@ import android.view.MenuItem;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
 
     private DrawerLayout mDrawerLayout;
 
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
         FragPagerAdapter adapter = new FragPagerAdapter(getSupportFragmentManager());
 
-        int vpagerPosition = adapter.getItemPosition(adapter);
+//        int vpagerPosition = adapter.getItemPosition(adapter);
         // add fragment into adpter
 //        adapter.addFragment(MovieListFragment.newInstance(popApi), "Most Popular");
 //        adapter.addFragment(MovieListFragment.newInstance(topRatedAPi), "Top Rated");

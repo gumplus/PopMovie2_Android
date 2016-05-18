@@ -24,7 +24,7 @@ import java.util.ArrayList;
  */
 
 
-public class FavoriteFragment extends Fragment {
+public class FavoriteFragment extends Fragment  {
 
     //   "/movie/{id}/reviews"
 

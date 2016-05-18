@@ -2,6 +2,7 @@ package com.example.cyp.popmovie2;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ import okhttp3.Response;
 public class DetailActivity extends AppCompatActivity {
 
     private static String videoApi = "http://api.themoviedb.org/3/movie/";
-    private final String video_api_key = "/videos?api_key=92741aee53714cbe1a7d87fc658bbaad";
+    private static final String video_api_key = "/videos?api_key=92741aee53714cbe1a7d87fc658bbaad";
 
     // videoApi+id+video_api_key
     // https://www.youtube.com/watch?v=videoKey
@@ -115,42 +116,46 @@ public class DetailActivity extends AppCompatActivity {
         //Set the title of toolbar
         coToolbar.setTitle(movieTitle);
         //How to set the color and style of title ?
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.favorite_button);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // store the selected JsonBean Object into SQL
-
-//                + "id integer primary key autoincrement, "
-//                        + "posterUrl, "
-//                        + "title, "
-//                        + "overview, "
-//                        + "vote_average, "
-//                        + "release_date, "
-//                        + "movieId integer)";
-
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                ContentValues values = new ContentValues();
-                values.put("posterUrl", posterDetailUrl);
-                values.put("title", movieTitle);
-                values.put("overview", resultsDetailpage.get(moviePosition).getOverview());
-                values.put("vote_average", resultsDetailpage.get(moviePosition).getVote_average());
-                values.put("release_date", resultsDetailpage.get(moviePosition).getRelease_date());
-                values.put("movieId", movieId);
-
-                db.insert("Movie", null, values);
-
-                Toast.makeText(v.getContext(), "Collect the movie: " + movieTitle, Toast.LENGTH_SHORT).show();
-            }
-        });
-
         backDrop = (SimpleDraweeView) findViewById(R.id.detail_backdrop);
 
         Uri uri = Uri.parse(posterDetailUrl);
         backDrop.setImageURI(uri);
 
         trailerPlay();
+
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.favorite_button);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Add to My Favorite Tab
+
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+                Cursor cursor = db.rawQuery("select movieId from Movie where movieId = ?", new String[] {String.valueOf(movieId)});
+                if(movieId ==cursor.getInt(cursor.getColumnIndex("movieId"))) {
+
+                    db.execSQL("delete from Movie where movieId = ?", new String[] {String.valueOf(movieId)});
+                    Toast.makeText(v.getContext(), "Delete the movie: " + movieTitle, Toast.LENGTH_SHORT).show();
+
+                } else {
+
+                    ContentValues values = new ContentValues();
+                    values.put("posterUrl", posterDetailUrl);
+                    values.put("title", movieTitle);
+                    values.put("overview", resultsDetailpage.get(moviePosition).getOverview());
+                    values.put("vote_average", resultsDetailpage.get(moviePosition).getVote_average());
+                    values.put("release_date", resultsDetailpage.get(moviePosition).getRelease_date());
+                    values.put("movieId", movieId);
+
+                    db.insert("Movie", null, values);
+                    Toast.makeText(v.getContext(), "Collect the movie: " + movieTitle, Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
+
 
     }
 

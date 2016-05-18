@@ -41,17 +41,13 @@ public class FragPagerAdapter extends FragmentPagerAdapter {
                 return MovieListFragment.newInstance(topRatedAPi);
             case 2:
                 //Favorite Tab
-                return MovieListFragment.newInstance(topRatedAPi);
-//                return FavoriteFragment.newInstance();
-//            case 3:
-//                //Favorite Tab
-////                return MovieListFragment.newInstance(topRatedAPi);
-//                return FavoriteFragment.newInstance();
+                return FavoriteFragment.newInstance();
+
             default:
                 return null;
         }
-//        return mFragments.get(position);
     }
+
 
     @Override
     public int getCount() {
@@ -62,4 +58,7 @@ public class FragPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return mFragmentTitles.get(position);
     }
+
+
+
 }
