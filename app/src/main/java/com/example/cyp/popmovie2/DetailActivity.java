@@ -123,6 +123,7 @@ public class DetailActivity extends AppCompatActivity {
 
         trailerPlay();
 
+        dbHelper = new DatabaseHelper(this, "Movie.db", null, 1);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.favorite_button);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -132,10 +133,17 @@ public class DetailActivity extends AppCompatActivity {
 
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-                Cursor cursor = db.rawQuery("select movieId from Movie where movieId = ?", new String[] {String.valueOf(movieId)});
-                if(movieId ==cursor.getInt(cursor.getColumnIndex("movieId"))) {
+                String query = "SELECT movieId FROM " + "Movie" + " WHERE movieId = " + movieId;
+                Cursor cursor = db.rawQuery(query, null);
 
-                    db.execSQL("delete from Movie where movieId = ?", new String[] {String.valueOf(movieId)});
+//                "select movieId from Movie where movieId = ", new String[] {String.valueOf(movieId)}
+//                Cursor cursor = db.rawQuery("select movieId from Movie where movieId = ", new String[] {String.valueOf(movieId)});
+
+                if(movieId == cursor.getColumnIndex("movieId")) {
+
+                    String delQuery = "DELETE movieId FROM "+ "Movie" + " WHERE movieId = " + movieId;
+                    db.execSQL(delQuery);
+//                    db.execSQL("delete from Movie where movieId = ", new String[] {String.valueOf(movieId)});
                     Toast.makeText(v.getContext(), "Delete the movie: " + movieTitle, Toast.LENGTH_SHORT).show();
 
                 } else {

@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity  {
 
     //https://api.themoviedb.org/3movie?api_key=API_KEY&page=2
 
-
+//    public DatabaseHelper dbHelper;
 
 
     @Override
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
