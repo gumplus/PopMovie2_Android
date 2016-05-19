@@ -1,6 +1,5 @@
 package com.example.cyp.popmovie2;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -135,15 +134,15 @@ public class DetailActivity extends AppCompatActivity {
                 if (dbHelper.deleteMovie(movieId) == 0) {
                     Log.d("Delete Failed", "!");
 
-                    ContentValues values = new ContentValues();
-                    values.put("movieId", movieId);
-                    values.put("posterUrl", posterDetailUrl);
-                    values.put("title", movieTitle);
-                    values.put("overview", resultsDetailpage.get(moviePosition).getOverview());
-                    values.put("vote_average", resultsDetailpage.get(moviePosition).getVote_average());
-                    values.put("release_date", resultsDetailpage.get(moviePosition).getRelease_date());
+                    dbHelper.insertMovie(
+                            movieId,
+                            posterDetailUrl,
+                            movieTitle,
+                            resultsDetailpage.get(moviePosition).getOverview(),
+                            resultsDetailpage.get(moviePosition).getVote_average() ,
+                            resultsDetailpage.get(moviePosition).getRelease_date()
+                    );
 
-                    db.insert("Movie", null, values);
                     Toast.makeText(v.getContext(), "Collect the movie: " + movieTitle, Toast.LENGTH_SHORT).show();
 
                 } else {

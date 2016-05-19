@@ -27,10 +27,10 @@ public class FavoriteFragment extends Fragment  {
 
     //http://api.themoviedb.org/3/account/{id}/favorite_movies?api_key=###&session_id=###
 
-    private final String api_key = "?api_key=92741aee53714cbe1a7d87fc658bbaad";
+    private static final String api_key = "?api_key=92741aee53714cbe1a7d87fc658bbaad";
     private int movieId;
-    private ArrayList<Integer> movieIdFavorList = new ArrayList<>();
-    private ArrayList<String> posterUrlList = new ArrayList<>();
+    private ArrayList<Integer> movieIdFavorList;
+    private ArrayList<String> posterUrlList;
     //Api {id} to get a jsonBean
     private String baseIdApi = "http://api.themoviedb.org/3/movie/";
     private String posterBaseUrl = "http://image.tmdb.org/t/p/w185";
@@ -44,6 +44,9 @@ public class FavoriteFragment extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rvFavorite = (RecyclerView) inflater.inflate(R.layout.fragment_movie_list, container, false);
+
+        movieIdFavorList = new ArrayList<>();
+        posterUrlList = new ArrayList<>();
 
         dbFavorHelper = new DatabaseHelper(getActivity(), "MovieId.db", null, 1);
 
@@ -63,20 +66,6 @@ public class FavoriteFragment extends Fragment  {
         return favoriteFragment;
     }
 
-//    private ArrayList<Integer> getMovieIdList() {
-//        ArrayList<Integer> mList = new ArrayList<>();
-//        SQLiteDatabase db = dbFavorHelper.getReadableDatabase();
-//        Cursor cursor = db.query("Movie", null, null, null, null, null, null);
-//        if(cursor.moveToFirst()) {
-//            do {
-//                int mId = cursor.getInt(cursor.getColumnIndex("movieId"));
-//                movieIdFavorList.add(mId);
-//                String url = cursor.getString(cursor.getColumnIndex("posterUrl"));
-//                posterUrlList.add(url);
-//            } while (cursor.moveToNext());
-//        }
-//        return mList;
-//    }
 
     private void setupRecyclerView(RecyclerView rvFavorite) {
 
@@ -86,9 +75,11 @@ public class FavoriteFragment extends Fragment  {
 
     public class FavorAdapter extends RecyclerView.Adapter<FavorAdapter.ViewHolder> {
 
+
         private ArrayList<String> mFavorValues;
 
         public FavorAdapter(Context context, ArrayList<String> movieUrls) {
+
             mFavorValues = movieUrls;
         }
 

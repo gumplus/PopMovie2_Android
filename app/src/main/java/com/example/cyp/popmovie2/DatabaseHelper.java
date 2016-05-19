@@ -44,7 +44,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean inserMovie (int movieId, String posterUrl, String title, String overview, double vote_average, String release_date) {
+    public boolean insertMovie (int movieId, String posterUrl, String title, String overview, double vote_average, String release_date) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
