@@ -38,7 +38,7 @@ public class MovieListFragment extends Fragment {
     private final String api_key = "?api_key=92741aee53714cbe1a7d87fc658bbaad";
     private final String posterBaseUrl = "http://image.tmdb.org/t/p/w185";
 
-    private static JsonBean jsonTransfer = new JsonBean();
+    private JsonBean jsonTransfer = new JsonBean();
 
     private OkHttpClient okHttp = new OkHttpClient();
     private Gson gson = new Gson();
@@ -67,7 +67,6 @@ public class MovieListFragment extends Fragment {
     @Override
     // Inflate the view for the fragment based on layout XML
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
-
 
         //put the recyclerView into the container of MovieListFragment
         rv = (RecyclerView) inflater.inflate(R.layout.fragment_movie_list, container, false);
@@ -150,7 +149,7 @@ public class MovieListFragment extends Fragment {
 
     //My Custom RecyclerView Adapter
 
-    public static class MovieViewAdapter extends RecyclerView.Adapter<MovieViewAdapter.ViewHolder> {
+    public class MovieViewAdapter extends RecyclerView.Adapter<MovieViewAdapter.ViewHolder> {
 
         private final TypedValue mTypeValue = new TypedValue();
         private int mBackground;
@@ -170,7 +169,7 @@ public class MovieListFragment extends Fragment {
         }
 
 
-        public static class ViewHolder extends RecyclerView.ViewHolder {
+        public  class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
             public final SimpleDraweeView draweeView;
 

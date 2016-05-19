@@ -2,7 +2,6 @@ package com.example.cyp.popmovie2;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -133,37 +132,30 @@ public class DetailActivity extends AppCompatActivity {
 
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-                String query = "SELECT movieId FROM " + "Movie" + " WHERE movieId = " + movieId;
-                Cursor cursor = db.rawQuery(query, null);
-
-//                "select movieId from Movie where movieId = ", new String[] {String.valueOf(movieId)}
-//                Cursor cursor = db.rawQuery("select movieId from Movie where movieId = ", new String[] {String.valueOf(movieId)});
-
-                if(movieId == cursor.getColumnIndex("movieId")) {
-
-                    String delQuery = "DELETE movieId FROM "+ "Movie" + " WHERE movieId = " + movieId;
-                    db.execSQL(delQuery);
-//                    db.execSQL("delete from Movie where movieId = ", new String[] {String.valueOf(movieId)});
-                    Toast.makeText(v.getContext(), "Delete the movie: " + movieTitle, Toast.LENGTH_SHORT).show();
-
-                } else {
+                if (dbHelper.deleteMovie(movieId) == 0) {
+                    Log.d("Delete Failed", "!");
 
                     ContentValues values = new ContentValues();
+                    values.put("movieId", movieId);
                     values.put("posterUrl", posterDetailUrl);
                     values.put("title", movieTitle);
                     values.put("overview", resultsDetailpage.get(moviePosition).getOverview());
                     values.put("vote_average", resultsDetailpage.get(moviePosition).getVote_average());
                     values.put("release_date", resultsDetailpage.get(moviePosition).getRelease_date());
-                    values.put("movieId", movieId);
 
                     db.insert("Movie", null, values);
                     Toast.makeText(v.getContext(), "Collect the movie: " + movieTitle, Toast.LENGTH_SHORT).show();
+
+                } else {
+                    dbHelper.deleteMovie(movieId);
+                    Toast.makeText(v.getContext(), "Delete the movie: " + movieTitle, Toast.LENGTH_SHORT).show();
                 }
 
 
-            }
-        });
 
+            }
+
+        });
 
     }
 

@@ -41,8 +41,8 @@ public class FragPagerAdapter extends FragmentPagerAdapter {
                 return MovieListFragment.newInstance(topRatedAPi);
             case 2:
                 //Favorite Tab
-                return MovieListFragment.newInstance(topRatedAPi);
-//                return FavoriteFragment.newInstance();
+//                return MovieListFragment.newInstance(topRatedAPi);
+                return FavoriteFragment.newInstance();
 
             default:
                 return null;
