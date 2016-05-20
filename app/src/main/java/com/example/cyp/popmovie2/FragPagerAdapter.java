@@ -27,10 +27,6 @@ public class FragPagerAdapter extends FragmentPagerAdapter {
         super(fm);
     }
 
-//    public void addFragment(Fragment fragment, String title) {
-////        mFragments.add(fragment);
-//        mFragmentTitles.add(title);
-//    }
 
     @Override
     public Fragment getItem(int position) {
@@ -40,8 +36,6 @@ public class FragPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return MovieListFragment.newInstance(topRatedAPi);
             case 2:
-                //Favorite Tab
-//                return MovieListFragment.newInstance(topRatedAPi);
                 return FavoriteFragment.newInstance();
 
             default:

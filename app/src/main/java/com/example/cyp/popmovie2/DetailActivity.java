@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -52,7 +53,7 @@ public class DetailActivity extends AppCompatActivity {
 
 
     private int movieId;
-    private String posterDetailUrl;
+    private String posterUrl;
     private String movieTitle;
     private String overView;
     private double voteAverage;
@@ -71,9 +72,9 @@ public class DetailActivity extends AppCompatActivity {
     private DatabaseHelper dbHelper;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle bundle) {
         Fresco.initialize(this);
-        super.onCreate(savedInstanceState);
+        super.onCreate(bundle);
         setContentView(R.layout.activity_detail);
 
 
@@ -82,31 +83,46 @@ public class DetailActivity extends AppCompatActivity {
         release_date = (TextView) findViewById(R.id.release_date_info);
         trailerPlay = (ImageView) findViewById(R.id.trailer_play);
 
-        dbHelper = new DatabaseHelper(this, "Movie.db", null, 1);
+
         resultsDetailpage = new ArrayList<>();
         resultsVideo = new ArrayList<>();
 
         //normal way to get data via intent.putExtra function
         Intent intent = getIntent();
-        savedInstanceState = getIntent().getExtras();
+        bundle = getIntent().getExtras();
+        switch (intent.getStringExtra("from")) {
+            case "Main":
+                BeanReceived = intent.getParcelableExtra("jsonData");
+                resultsDetailpage = BeanReceived.getResults();
+                moviePosition = bundle.getInt("position");
 
-        posterDetailUrl = intent.getStringExtra("posterUrltodetailpage");
+                movieId = resultsDetailpage.get(moviePosition).getId();
+                posterUrl = intent.getStringExtra("posterUrltodetailpage");
+                movieTitle = resultsDetailpage.get(moviePosition).getTitle();
+                overView = resultsDetailpage.get(moviePosition).getOverview();
+                voteAverage = resultsDetailpage.get(moviePosition).getVote_average();
+                releaseDate = resultsDetailpage.get(moviePosition).getRelease_date();
+                break;
 
-        //get the jsonBean,results,position from the view of selected movie [Parcelable way]
-        BeanReceived = intent.getParcelableExtra("jsonData");
-        resultsDetailpage = BeanReceived.getResults();
-        moviePosition = savedInstanceState.getInt("position");
+            case "Favorite":
+                movieId = bundle.getInt("movieId");
+                posterUrl = bundle.getString("posterUrl");
+                movieTitle = bundle.getString("movieTitle");
+                overView = bundle.getString("overview");
+                voteAverage = bundle.getDouble("vote_average");
+                releaseDate = bundle.getString("release_date");
+                break;
 
-        movieId = resultsDetailpage.get(moviePosition).getId();
-        movieTitle = resultsDetailpage.get(moviePosition).getTitle();
-        overView = resultsDetailpage.get(moviePosition).getOverview();
-        voteAverage = resultsDetailpage.get(moviePosition).getVote_average();
-        releaseDate = resultsDetailpage.get(moviePosition).getRelease_date();
+            default:
+
+                break;
+        }
+
 
 
         //set the detailed info of movie
         movieText.setText(overView);
-        vote_average.setText("vote_average : " + String.valueOf(vote_average));
+        vote_average.setText("vote_average : " + voteAverage);
         release_date.setText("release_date : " + releaseDate);
 
         Log.d("Received jsonData", String.valueOf(BeanReceived));
@@ -124,44 +140,44 @@ public class DetailActivity extends AppCompatActivity {
         //How to set the color and style of title ?
         backDrop = (SimpleDraweeView) findViewById(R.id.detail_backdrop);
 
-        Uri uri = Uri.parse(posterDetailUrl);
+        Uri uri = Uri.parse(posterUrl);
         backDrop.setImageURI(uri);
 
         trailerPlay();
 
+        dbHelper = new DatabaseHelper(this, "Movie.db", null, 1);
 
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.favorite_button);
+        if (dbHelper.existMovie(movieId)) {
+            fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.favor_button));
+        }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.favorite_button);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Add to My Favorite Tab
 
-                if(dbHelper.getMovie(movieId) != null) {
+                if(dbHelper.existMovie(movieId)) {
+
                     dbHelper.deleteMovie(movieId);
+                    fab.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.unfavor_button));
                     Toast.makeText(v.getContext(), "Delete the movie: " + movieTitle, Toast.LENGTH_SHORT).show();
+
+//
+//
+//                    fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_full_sad));
                 } else {
                     dbHelper.insertMovie(
                             movieId,
-                            posterDetailUrl,
+                            posterUrl,
                             movieTitle,
                             overView,
                             voteAverage ,
                             releaseDate
                     );
+                    fab.setImageDrawable(ContextCompat.getDrawable(v.getContext(), R.drawable.favor_button));
                     Toast.makeText(v.getContext(), "Collect the movie: " + movieTitle, Toast.LENGTH_SHORT).show();
                 }
-
-                dbHelper.insertMovie(
-                        movieId,
-                        posterDetailUrl,
-                        movieTitle,
-                        overView,
-                        voteAverage ,
-                        releaseDate
-                );
-                Toast.makeText(v.getContext(), "Collect the movie: " + movieTitle, Toast.LENGTH_SHORT).show();
-
 
             }
 

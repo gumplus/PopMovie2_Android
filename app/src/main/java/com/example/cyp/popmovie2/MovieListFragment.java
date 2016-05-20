@@ -215,11 +215,13 @@ public class MovieListFragment extends Fragment {
                     //store jsonData into a bundle
                     Bundle bundleToDetail = new Bundle();
                     // store MovieID into a bundle
+
                     bundleToDetail.putInt("position", position);
                     bundleToDetail.putParcelable("jsonData", jsonTransfer);
 
                     //the normal way to store detailed data into a intent
                     Intent intent = new Intent(context, DetailActivity.class);
+                    intent.putExtra("from","Main");
                     intent.putExtras(bundleToDetail);
                     intent.putExtra("posterUrltodetailpage",mValues.get(position));
 

@@ -66,12 +66,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.delete("Movie", "movieId = ?", new String[] { Integer.toString(movieId)});
     }
 
-    public Cursor getMovie (Integer movieId) {
+    public boolean existMovie(Integer movieId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String SQL ="SELECT * FROM Movie WHERE movieId="+movieId+"";
         Cursor cursor = db.rawQuery(SQL, null);
-        cursor.close();  //Is this right?
-        return cursor;
+
+
+        if(cursor.moveToFirst()) {
+
+                    return  true;
+        } else {
+
+            return false;
+        }
 
     }
 
@@ -83,7 +90,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public ArrayList<Integer> getAllMovieId() {
         ArrayList<Integer> MovieIdList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         //SQLite standard code not android one
         Cursor favorCursor = db.rawQuery("select * from Movie", null);
         favorCursor.moveToFirst();
@@ -98,24 +105,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public ArrayList<String> getAllPosterUrl() {
-        ArrayList<String> MovieIdList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<String> posterUrlList = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
         //SQLite standard code not android one
         Cursor favorCursor = db.rawQuery("select * from Movie", null);
         favorCursor.moveToFirst();
 
         while(favorCursor.isAfterLast() ==false) {
-            MovieIdList.add(favorCursor.getString(favorCursor.getColumnIndex("posterUrl")));
+            posterUrlList.add(favorCursor.getString(favorCursor.getColumnIndex("posterUrl")));
             favorCursor.moveToNext();
         }
         favorCursor.close();
-        return MovieIdList;
+        return posterUrlList;
 
     }
 
     public ArrayList<String> getAllTitle() {
         ArrayList<String> titleList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor favorCursor = db.rawQuery("select * from Movie", null);
         favorCursor.moveToFirst();
@@ -130,7 +137,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public ArrayList<String> getAllOverview() {
         ArrayList<String> overviewList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor favorCursor = db.rawQuery("select * from Movie", null);
         favorCursor.moveToFirst();
@@ -144,15 +151,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<String> getAllvoteAverage() {
-        ArrayList<String> voteAverageList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
+    public ArrayList<Double> getAllvoteAverage() {
+        ArrayList<Double> voteAverageList = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor favorCursor = db.rawQuery("select * from Movie", null);
         favorCursor.moveToFirst();
 
         while(favorCursor.isAfterLast() ==false) {
-            voteAverageList.add(favorCursor.getString(favorCursor.getColumnIndex("vote_average")));
+            voteAverageList.add(favorCursor.getDouble(favorCursor.getColumnIndex("vote_average")));
             favorCursor.moveToNext();
         }
         favorCursor.close();
@@ -161,7 +168,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public ArrayList<String> getAllReleaseDate() {
         ArrayList<String> releaseDateList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor favorCursor = db.rawQuery("select * from Movie", null);
         favorCursor.moveToFirst();

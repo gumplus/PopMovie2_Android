@@ -1,17 +1,17 @@
 package com.example.cyp.popmovie2;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -29,15 +29,20 @@ public class FavoriteFragment extends Fragment  {
     //http://api.themoviedb.org/3/account/{id}/favorite_movies?api_key=###&session_id=###
 
     private static final String api_key = "?api_key=92741aee53714cbe1a7d87fc658bbaad";
-    private int movieId;
+
     private ArrayList<Integer> movieIdList;
     private ArrayList<String> posterUrlList;
+    private ArrayList<String> titleList;
+    private ArrayList<String> overviewList;
+    private ArrayList<Double> voteList;
+    private ArrayList<String> releaseList;
+
     //Api {id} to get a jsonBean
     private String baseIdApi = "http://api.themoviedb.org/3/movie/";
     private String posterBaseUrl = "http://image.tmdb.org/t/p/w185";
     private DatabaseHelper dbFavorHelper;
     private RecyclerView rvFavorite;
-    private FavorBean jsonFavor = new FavorBean();
+
 
 
 
@@ -48,11 +53,21 @@ public class FavoriteFragment extends Fragment  {
 
         movieIdList = new ArrayList<>();
         posterUrlList = new ArrayList<>();
+        titleList = new ArrayList<>();
+        overviewList = new ArrayList<>();
+        voteList = new ArrayList<>();
+        releaseList = new ArrayList<>();
 
         dbFavorHelper = new DatabaseHelper(getActivity(), "Movie.db", null, 1);
 
         movieIdList = dbFavorHelper.getAllMovieId();
         posterUrlList = dbFavorHelper.getAllPosterUrl();
+        titleList = dbFavorHelper.getAllTitle();
+        overviewList = dbFavorHelper.getAllOverview();
+        voteList = dbFavorHelper.getAllvoteAverage();
+        releaseList = dbFavorHelper.getAllReleaseDate();
+
+
 
         setupRecyclerView(rvFavorite);
         return rvFavorite;
@@ -69,7 +84,7 @@ public class FavoriteFragment extends Fragment  {
 
     private void setupRecyclerView(RecyclerView rvFavorite) {
 
-        rvFavorite.setLayoutManager(new LinearLayoutManager(rvFavorite.getContext()));
+        rvFavorite.setLayoutManager(new GridLayoutManager(getContext(), 2));
         rvFavorite.setAdapter(new FavorAdapter(getActivity(), posterUrlList));
     }
 
@@ -118,12 +133,30 @@ public class FavoriteFragment extends Fragment  {
                 @Override
                 public void onClick(View v) {
 
-                    Toast.makeText(v.getContext(), "Detailpage Coming Soon " + "!", Toast.LENGTH_SHORT).show();
-
 //                    Context context = v.getContext();
 //                    //store jsonData into a bundle
-//                    Bundle bundleToDetail = new Bundle();
-//                    // store MovieID into a bundle
+                    Bundle favorBundle = new Bundle();
+
+                    favorBundle.putInt("movieId", movieIdList.get(position));
+                    favorBundle.putString("posterUrl", posterUrlList.get(position));
+                    favorBundle.putString("movieTitle", titleList.get(position));
+                    favorBundle.putString("overview", overviewList.get(position));
+                    favorBundle.putDouble("vote_average", voteList.get(position));
+                    favorBundle.putString("release_date", releaseList.get(position));
+
+                    Intent intent = new Intent(v.getContext(),DetailActivity.class);
+                    intent.putExtras(favorBundle);
+                    intent.putExtra("from","Favorite");
+                    startActivity(intent);
+
+//                    Toast.makeText(v.getContext(), "Detailpage Coming Soon " + "!", Toast.LENGTH_SHORT).show();
+//                    private ArrayList<Integer> movieIdList;
+//                    private ArrayList<String> posterUrlList;
+//                    private ArrayList<String> titleList;
+//                    private ArrayList<String> overviewList;
+//                    private ArrayList<Double> voteList;
+//                    private ArrayList<String> releaseList;
+
 //                    bundleToDetail.putInt("position", position);
 //                    bundleToDetail.putParcelable("jsonData", jsonFavor);
 //
