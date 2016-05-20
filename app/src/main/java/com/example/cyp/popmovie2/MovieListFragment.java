@@ -151,7 +151,7 @@ public class MovieListFragment extends Fragment {
 
     public class MovieViewAdapter extends RecyclerView.Adapter<MovieViewAdapter.ViewHolder> {
 
-        private final TypedValue mTypeValue = new TypedValue();
+        private TypedValue mTypeValue = new TypedValue();
         private int mBackground;
         private ArrayList<String> mValues;
 
@@ -202,7 +202,6 @@ public class MovieListFragment extends Fragment {
 
             Log.d("mValues.get(i)", mValues.get(position));
 
-
             Uri uri = Uri.parse(mValues.get(position));
             viewHolder.draweeView.setImageURI(uri);
 
@@ -223,7 +222,6 @@ public class MovieListFragment extends Fragment {
                     Intent intent = new Intent(context, DetailActivity.class);
                     intent.putExtras(bundleToDetail);
                     intent.putExtra("posterUrltodetailpage",mValues.get(position));
-//                    intent.putExtra("movie_id_todetailpage",movieIdList.get(position));
 
                     Log.d("Movie positon is",String.valueOf(position));
                     context.startActivity(intent);

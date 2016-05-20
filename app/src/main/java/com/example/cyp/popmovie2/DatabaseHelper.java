@@ -18,12 +18,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String CREATE_MovieBase = "create table Movie ("
             + "id integer primary key autoincrement, "
+            + "movieId integer, "
             + "posterUrl String, "
             + "title String, "
             + "overview String, "
             + "vote_average double, "
-            + "release_date String, "
-            + "movieId integer)";
+            + "release_date String)";
 
     public DatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory cursorFactory, int version) {
         super(context, name ,cursorFactory, version);
@@ -58,12 +58,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         db.insert("Movie", null, values);
         return  true;
+
     }
 
     public Integer deleteMovie (Integer movieId) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete("Movie", "movieId = ?", new String[] { Integer.toString(movieId)});
     }
+
+    public Cursor getMovie (Integer movieId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String SQL ="SELECT * FROM Movie WHERE movieId="+movieId+"";
+        Cursor cursor = db.rawQuery(SQL, null);
+        cursor.close();  //Is this right?
+        return cursor;
+
+    }
+
+//    Cursor c = db.rawQuery("select * from user where username=? and password = ?",
+//            new Stirng[]{"用户名","密码"});
+
 
 
 
@@ -78,6 +92,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             MovieIdList.add(favorCursor.getInt(favorCursor.getColumnIndex("movieId")));
             favorCursor.moveToNext();
         }
+        favorCursor.close();
         return MovieIdList;
 
     }
@@ -93,9 +108,72 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             MovieIdList.add(favorCursor.getString(favorCursor.getColumnIndex("posterUrl")));
             favorCursor.moveToNext();
         }
+        favorCursor.close();
         return MovieIdList;
 
     }
+
+    public ArrayList<String> getAllTitle() {
+        ArrayList<String> titleList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor favorCursor = db.rawQuery("select * from Movie", null);
+        favorCursor.moveToFirst();
+
+        while(favorCursor.isAfterLast() ==false) {
+            titleList.add(favorCursor.getString(favorCursor.getColumnIndex("title")));
+            favorCursor.moveToNext();
+        }
+        favorCursor.close();
+        return titleList;
+    }
+
+    public ArrayList<String> getAllOverview() {
+        ArrayList<String> overviewList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor favorCursor = db.rawQuery("select * from Movie", null);
+        favorCursor.moveToFirst();
+
+        while(favorCursor.isAfterLast() ==false) {
+            overviewList.add(favorCursor.getString(favorCursor.getColumnIndex("overview")));
+            favorCursor.moveToNext();
+        }
+        favorCursor.close();
+        return overviewList;
+    }
+
+
+    public ArrayList<String> getAllvoteAverage() {
+        ArrayList<String> voteAverageList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor favorCursor = db.rawQuery("select * from Movie", null);
+        favorCursor.moveToFirst();
+
+        while(favorCursor.isAfterLast() ==false) {
+            voteAverageList.add(favorCursor.getString(favorCursor.getColumnIndex("vote_average")));
+            favorCursor.moveToNext();
+        }
+        favorCursor.close();
+        return voteAverageList;
+    }
+
+    public ArrayList<String> getAllReleaseDate() {
+        ArrayList<String> releaseDateList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor favorCursor = db.rawQuery("select * from Movie", null);
+        favorCursor.moveToFirst();
+
+        while(favorCursor.isAfterLast() ==false) {
+            releaseDateList.add(favorCursor.getString(favorCursor.getColumnIndex("release_date")));
+            favorCursor.moveToNext();
+        }
+        favorCursor.close();
+        return releaseDateList;
+    }
+
 
 
 }

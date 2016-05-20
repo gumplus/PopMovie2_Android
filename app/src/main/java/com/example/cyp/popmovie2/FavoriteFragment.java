@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ public class FavoriteFragment extends Fragment  {
 
     private static final String api_key = "?api_key=92741aee53714cbe1a7d87fc658bbaad";
     private int movieId;
-    private ArrayList<Integer> movieIdFavorList;
+    private ArrayList<Integer> movieIdList;
     private ArrayList<String> posterUrlList;
     //Api {id} to get a jsonBean
     private String baseIdApi = "http://api.themoviedb.org/3/movie/";
@@ -45,14 +46,13 @@ public class FavoriteFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rvFavorite = (RecyclerView) inflater.inflate(R.layout.fragment_movie_list, container, false);
 
-        movieIdFavorList = new ArrayList<>();
+        movieIdList = new ArrayList<>();
         posterUrlList = new ArrayList<>();
 
-        dbFavorHelper = new DatabaseHelper(getActivity(), "MovieId.db", null, 1);
+        dbFavorHelper = new DatabaseHelper(getActivity(), "Movie.db", null, 1);
 
-        movieIdFavorList = dbFavorHelper.getAllMovieId();
+        movieIdList = dbFavorHelper.getAllMovieId();
         posterUrlList = dbFavorHelper.getAllPosterUrl();
-//        movieIdFavorList = getMovieIdList();
 
         setupRecyclerView(rvFavorite);
         return rvFavorite;
@@ -75,12 +75,17 @@ public class FavoriteFragment extends Fragment  {
 
     public class FavorAdapter extends RecyclerView.Adapter<FavorAdapter.ViewHolder> {
 
-
+        private TypedValue mTypeValue = new TypedValue();
+        private int mBackground;
         private ArrayList<String> mFavorValues;
 
         public FavorAdapter(Context context, ArrayList<String> movieUrls) {
 
             mFavorValues = movieUrls;
+            //get Theme
+            context.getTheme().resolveAttribute(R.attr.selectableItemBackground, mTypeValue, true);
+            //get the resourceId of background
+            mBackground = mTypeValue.resourceId;
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -99,7 +104,7 @@ public class FavoriteFragment extends Fragment  {
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.list_movie_poster, parent, false);
-
+            view.setBackgroundResource(mBackground);
             return new ViewHolder(view);
         }
 

@@ -1,7 +1,6 @@
 package com.example.cyp.popmovie2;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -40,7 +39,7 @@ public class DetailActivity extends AppCompatActivity {
     // https://www.youtube.com/watch?v=videoKey
     //videoKey = videoBean.getResults().getKey();
 
-    private String movieTitle;
+
     private int moviePosition;
     private String videoApiUrl;
 
@@ -51,8 +50,13 @@ public class DetailActivity extends AppCompatActivity {
     private TextView release_date;
     private ImageView trailerPlay;
 
-    private String posterDetailUrl;
+
     private int movieId;
+    private String posterDetailUrl;
+    private String movieTitle;
+    private String overView;
+    private double voteAverage;
+    private String releaseDate;
 
     private OkHttpClient okHttpClient = new OkHttpClient();
     private Gson gsonDetail = new Gson();
@@ -78,7 +82,7 @@ public class DetailActivity extends AppCompatActivity {
         release_date = (TextView) findViewById(R.id.release_date_info);
         trailerPlay = (ImageView) findViewById(R.id.trailer_play);
 
-        dbHelper = new DatabaseHelper(this, "MovieId.db", null, 1);
+        dbHelper = new DatabaseHelper(this, "Movie.db", null, 1);
         resultsDetailpage = new ArrayList<>();
         resultsVideo = new ArrayList<>();
 
@@ -91,15 +95,19 @@ public class DetailActivity extends AppCompatActivity {
         //get the jsonBean,results,position from the view of selected movie [Parcelable way]
         BeanReceived = intent.getParcelableExtra("jsonData");
         resultsDetailpage = BeanReceived.getResults();
-
         moviePosition = savedInstanceState.getInt("position");
 
-        movieTitle = resultsDetailpage.get(moviePosition).getTitle();
         movieId = resultsDetailpage.get(moviePosition).getId();
+        movieTitle = resultsDetailpage.get(moviePosition).getTitle();
+        overView = resultsDetailpage.get(moviePosition).getOverview();
+        voteAverage = resultsDetailpage.get(moviePosition).getVote_average();
+        releaseDate = resultsDetailpage.get(moviePosition).getRelease_date();
+
+
         //set the detailed info of movie
-        movieText.setText(resultsDetailpage.get(moviePosition).getOverview());
-        vote_average.setText("vote_average : " + String.valueOf(resultsDetailpage.get(moviePosition).getVote_average()));
-        release_date.setText("release_date : " + resultsDetailpage.get(moviePosition).getRelease_date());
+        movieText.setText(overView);
+        vote_average.setText("vote_average : " + String.valueOf(vote_average));
+        release_date.setText("release_date : " + releaseDate);
 
         Log.d("Received jsonData", String.valueOf(BeanReceived));
         Log.d("movieId", String.valueOf(movieId));
@@ -121,7 +129,7 @@ public class DetailActivity extends AppCompatActivity {
 
         trailerPlay();
 
-        dbHelper = new DatabaseHelper(this, "Movie.db", null, 1);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.favorite_button);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -129,27 +137,30 @@ public class DetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Add to My Favorite Tab
 
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-                if (dbHelper.deleteMovie(movieId) == 0) {
-                    Log.d("Delete Failed", "!");
-
+                if(dbHelper.getMovie(movieId) != null) {
+                    dbHelper.deleteMovie(movieId);
+                    Toast.makeText(v.getContext(), "Delete the movie: " + movieTitle, Toast.LENGTH_SHORT).show();
+                } else {
                     dbHelper.insertMovie(
                             movieId,
                             posterDetailUrl,
                             movieTitle,
-                            resultsDetailpage.get(moviePosition).getOverview(),
-                            resultsDetailpage.get(moviePosition).getVote_average() ,
-                            resultsDetailpage.get(moviePosition).getRelease_date()
+                            overView,
+                            voteAverage ,
+                            releaseDate
                     );
-
                     Toast.makeText(v.getContext(), "Collect the movie: " + movieTitle, Toast.LENGTH_SHORT).show();
-
-                } else {
-                    dbHelper.deleteMovie(movieId);
-                    Toast.makeText(v.getContext(), "Delete the movie: " + movieTitle, Toast.LENGTH_SHORT).show();
                 }
 
+                dbHelper.insertMovie(
+                        movieId,
+                        posterDetailUrl,
+                        movieTitle,
+                        overView,
+                        voteAverage ,
+                        releaseDate
+                );
+                Toast.makeText(v.getContext(), "Collect the movie: " + movieTitle, Toast.LENGTH_SHORT).show();
 
 
             }
