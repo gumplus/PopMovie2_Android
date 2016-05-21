@@ -21,6 +21,7 @@ public class FragPagerAdapter extends FragmentPagerAdapter {
     private String topRatedAPi = "http://api.themoviedb.org/3/movie/top_rated";
     private String[] titleList = {"Most Popular", "Top Rated", "My Favorite"};
     private List<String> mFragmentTitles = new ArrayList<>(Arrays.asList(titleList));
+    private int p = 1;
 //    private List<Fragment> mFragments = new ArrayList<>();
 
     public FragPagerAdapter(FragmentManager fm) {
@@ -32,9 +33,9 @@ public class FragPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return MovieListFragment.newInstance(popApi);
+                return MovieListFragment.newInstance(popApi, p);
             case 1:
-                return MovieListFragment.newInstance(topRatedAPi);
+                return MovieListFragment.newInstance(topRatedAPi, p);
             case 2:
                 return FavoriteFragment.newInstance();
 

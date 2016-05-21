@@ -18,7 +18,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 public class MainActivity extends AppCompatActivity  {
 
     private DrawerLayout mDrawerLayout;
-
+    // you can enter your api_key below:
     private final String api_key = "?api_key=92741aee53714cbe1a7d87fc658bbaad";
     //the base api of popular
     private String popApi = "http://api.themoviedb.org/3/movie/popular";
@@ -83,15 +83,10 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
+
     private void setupViewPager(ViewPager viewpager) {
 
         FragPagerAdapter adapter = new FragPagerAdapter(getSupportFragmentManager());
-
-//        int vpagerPosition = adapter.getItemPosition(adapter);
-        // add fragment into adpter
-//        adapter.addFragment(MovieListFragment.newInstance(popApi), "Most Popular");
-//        adapter.addFragment(MovieListFragment.newInstance(topRatedAPi), "Top Rated");
-//        adapter.addFragment(MovieListFragment.newInstance(topRatedAPi), "My Favorite");
 
         viewpager.setAdapter(adapter);
     }

@@ -133,8 +133,6 @@ public class FavoriteFragment extends Fragment  {
                 @Override
                 public void onClick(View v) {
 
-//                    Context context = v.getContext();
-//                    //store jsonData into a bundle
                     Bundle favorBundle = new Bundle();
 
                     favorBundle.putInt("movieId", movieIdList.get(position));
@@ -149,25 +147,6 @@ public class FavoriteFragment extends Fragment  {
                     intent.putExtra("from","Favorite");
                     startActivity(intent);
 
-//                    Toast.makeText(v.getContext(), "Detailpage Coming Soon " + "!", Toast.LENGTH_SHORT).show();
-//                    private ArrayList<Integer> movieIdList;
-//                    private ArrayList<String> posterUrlList;
-//                    private ArrayList<String> titleList;
-//                    private ArrayList<String> overviewList;
-//                    private ArrayList<Double> voteList;
-//                    private ArrayList<String> releaseList;
-
-//                    bundleToDetail.putInt("position", position);
-//                    bundleToDetail.putParcelable("jsonData", jsonFavor);
-//
-//                    //the normal way to store detailed data into a intent
-//                    Intent intent = new Intent(context, DetailActivity.class);
-//                    intent.putExtras(bundleToDetail);
-//                    intent.putExtra("posterUrltodetailpage",mFavorValues.get(position));
-////                    intent.putExtra("movie_id_todetailpage",movieIdList.get(position));
-//
-//                    Log.d("Movie positon is",String.valueOf(position));
-//                    context.startActivity(intent);
 
 
                 }

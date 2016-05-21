@@ -38,21 +38,23 @@ public class MovieListFragment extends Fragment {
     private final String api_key = "?api_key=92741aee53714cbe1a7d87fc658bbaad";
     private final String posterBaseUrl = "http://image.tmdb.org/t/p/w185";
 
+
     private JsonBean jsonTransfer = new JsonBean();
 
     private OkHttpClient okHttp = new OkHttpClient();
     private Gson gson = new Gson();
     //the base api of popular or topRatedApi
     private String whichApi;
-
+    private int page ;
     private RecyclerView rv;
 
     //newInstance constructor for creating fragment with arguments
-    public static MovieListFragment newInstance(String api) {
+    public static MovieListFragment newInstance(String api, int p) {
 
         MovieListFragment mlf = new MovieListFragment();
         Bundle args = new Bundle();
         args.putString("whichApi", api);
+        args.putInt("page", p);
         mlf.setArguments(args);
         return mlf;
     }
@@ -72,7 +74,8 @@ public class MovieListFragment extends Fragment {
         rv = (RecyclerView) inflater.inflate(R.layout.fragment_movie_list, container, false);
 
         this.whichApi = getArguments().getString("whichApi");
-        parseApi(whichApi);
+        this.page = getArguments().getInt("page");
+        parseApi(whichApi,page);
 
         setupRecyclerView(rv);
         return rv;
@@ -81,10 +84,10 @@ public class MovieListFragment extends Fragment {
 
 
 
-    private void parseApi(String api) {
+    private void parseApi(String api, int page) {
 
         Request request = new Request.Builder()
-                .url(whichApi + api_key + "&page=1")
+                .url(whichApi + api_key + "&page=" + page)
                 .build();
 
         okHttp.newCall(request).enqueue(new Callback() {
